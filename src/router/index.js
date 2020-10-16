@@ -15,6 +15,7 @@ const routes = [
     path: '/jobs',
     name: 'Job Board',
     component: JobBoard,
+    props: true,
   },
 ];
 

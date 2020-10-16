@@ -33,6 +33,12 @@ import { differenceInCalendarDays } from "date-fns";
 
 export default {
   name: "Jobs",
+  props: {
+    searchTerm: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
       jobs: null,
@@ -41,15 +47,32 @@ export default {
     };
   },
   created() {
-    axios.get("http://localhost:3000/jobs").then(response => {
-      if (response.status === 200 && response.data) {
-        this.jobs = response.data.jobs.map(job => {
-          job.added = this.formatDate(job.createdAt);
-          job.summary = this.formatRole(job.jobText);
-          return job;
+    // TODO: extract out this logic
+    if (this.searchTerm !== null) {
+      axios
+        .get(`http://localhost:3000/jobs/search/${this.searchTerm}`)
+        .then(response => {
+          if (response.status === 200 && response.data) {
+            this.jobs = response.data.jobs;
+            this.jobs.map(job => {
+              job.added = this.formatDate(job.createdAt);
+              job.summary = this.formatRole(job.jobText);
+              return job;
+            });
+          }
         });
-      }
-    });
+    } else {
+      axios.get("http://localhost:3000/jobs").then(response => {
+        if (response.status === 200 && response.data) {
+          this.jobs = response.data.jobs;
+          this.jobs.map(job => {
+            job.added = this.formatDate(job.createdAt);
+            job.summary = this.formatRole(job.jobText);
+            return job;
+          });
+        }
+      });
+    }
   },
   methods: {
     formatDate(date) {
