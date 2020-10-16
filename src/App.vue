@@ -9,8 +9,7 @@
 </template>
 
 <style>
-html,
-body {
+* {
   margin: 0;
   padding: 0;
   left: 0;
@@ -27,6 +26,7 @@ body {
 
 #nav {
   padding: 30px;
+  background-color: #3cbf0a;
 }
 
 #nav a {
@@ -35,6 +35,6 @@ body {
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #fff;
 }
 </style>

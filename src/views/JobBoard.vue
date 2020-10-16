@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <h1>Jobs</h1> -->
     <!-- TODO: move to modal  -->
     <div v-if="showModal && selectedJob" :class="$style.modal" @click.prevent="showModal = false">
       <span>
@@ -16,40 +15,37 @@
       </span>
     </div>
     <ul>
-      <li v-for="job in jobs" :key="job.jobId" :class="$style.jobCard" @click.prevent="loadJobDetails(job)">
+      <li v-for="job in jobs" :key="job.jobId" :class="$style.jobCard">
         <h2>{{ job.jobTitle }}</h2>
+        <p>{{job.jobLocation || 'Manchester'}}</p>
+        <p>${{ job.salary }}</p>
         <p>{{ job.companyName }}</p>
-        <span>
-          <p>
-            {{ job.salary }}
-          </p>
-          <p>
-            {{ job.added }}
-          </p>
-        </span>
+        <p>Posted: {{ job.added }}</p>
+        <p>{{job.summary}}</p>
+        <button @click.prevent="loadJobDetails(job)">See</button>
       </li>
     </ul>
   </div>
 </template>
 <script>
-import axios from 'axios';
-import { differenceInCalendarDays } from 'date-fns';
+import axios from "axios";
+import { differenceInCalendarDays } from "date-fns";
 
 export default {
-  name: 'Jobs',
+  name: "Jobs",
   data() {
     return {
       jobs: null,
       selectedJob: null,
-      showModal: false,
+      showModal: false
     };
   },
   created() {
-    axios.get('http://localhost:3000/jobs').then((response) => {
+    axios.get("http://localhost:3000/jobs").then(response => {
       if (response.status === 200 && response.data) {
-        this.jobs = response.data.jobs;
-        this.jobs.map((job) => {
+        this.jobs = response.data.jobs.map(job => {
           job.added = this.formatDate(job.createdAt);
+          job.summary = this.formatRole(job.jobText);
           return job;
         });
       }
@@ -58,16 +54,24 @@ export default {
   methods: {
     formatDate(date) {
       const numOfDays = differenceInCalendarDays(new Date(), new Date(date));
-      return `${numOfDays} day${numOfDays > 1 ? 's' : ''} ago`;
+      this.formatRole("t");
+      return `${numOfDays} day${numOfDays > 1 ? "s" : ""} ago`;
+    },
+    formatRole(text) {
+      if (text.length < 70) return text;
+      return `${text.slice(0, 67)}...`;
     },
     loadJobDetails(jobDetails) {
       this.selectedJob = jobDetails;
       this.showModal = true;
-    },
-  },
+    }
+  }
 };
 </script>
 <style module>
+body {
+  background-color: #f2f2f2;
+}
 ul {
   padding: 0;
 }
@@ -77,8 +81,8 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  background: rgb(155, 155, 155);
-  background: rgba(155, 155, 155, 0.7);
+  background-color: rgb(155, 155, 155);
+  background-color: rgba(155, 155, 155, 0.7);
   width: 100%;
   height: 100%;
 }
@@ -87,7 +91,7 @@ ul {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  background: rgb(255, 255, 200);
+  background-color: rgb(248, 248, 248);
   width: 80%;
   height: 80%;
   margin: 0 auto;
@@ -99,23 +103,24 @@ ul {
 .jobCard {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
+  text-align: left;
+  background-color: #fff;
+  box-shadow: #dddddd 2px 2px 5px;
   margin: 10px auto;
   padding: 2.5% 7.5%;
-  height: 150px;
-  width: 60%;
-  background: hotpink;
+  height: 300px;
+  width: 80%;
+  border-radius: 6px;
   list-style: none;
+}
+
+.jobCard > button {
+  background-color: #ddd;
 }
 
 .jobCard > h2,
 .jobCard > p {
   margin: 0;
-  line-height: 36px;
-}
-
-.jobCard > span {
-  display: flex;
-  justify-content: space-between;
 }
 </style>
