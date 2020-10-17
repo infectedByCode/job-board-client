@@ -1,10 +1,8 @@
 <template>
   <div>
     <form>
-      <label for="jobType">What</label>
-      <input v-model="jobType" type="text" name="jobType" />
-      <label for="location">Where</label>
-      <input v-model="location" type="text" name="location" />
+      <UserInput v-model="jobType" name="jobType" size="max" label="What" align="left" />
+      <UserInput v-model="location" name="location" size="large" label="Where" align="left" />
       <select>
         <option
           v-for="distance in distanceOptions"
@@ -18,8 +16,13 @@
 </template>
 
 <script>
+import UserInput from "../components/UserInput";
+
 export default {
   name: "Home",
+  components: {
+    UserInput
+  },
   data() {
     return {
       jobType: null,
@@ -49,24 +52,6 @@ form {
   width: 80%;
   margin: 0 auto;
   padding: 30% 0;
-}
-
-label {
-  display: block;
-  text-align: left;
-  width: 100%;
-  margin: 0 auto;
-}
-
-input {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 1%;
-}
-
-input:last-of-type {
-  width: 80%;
-  float: left;
 }
 
 select {

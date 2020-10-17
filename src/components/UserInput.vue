@@ -1,0 +1,79 @@
+<template>
+  <div>
+    <label v-if="label" :for="name">{{label}}</label>
+    <input type="text" :class="[$style[size],$style[align]]" />
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    label: {
+      type: String,
+      default: ""
+    },
+    name: {
+      type: String,
+      required: true,
+      default: ""
+    },
+    size: {
+      type: String,
+      required: true,
+      default: "max",
+      validator: value =>
+        ["small", "medium", "large", "max"].indexOf(value) !== -1
+    },
+    align: {
+      type: String,
+      required: true,
+      default: "center",
+      validator: value => ["left", "center", "right"].indexOf(value) !== -1
+    }
+  }
+};
+</script>
+
+<style module>
+label {
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin: 0 auto;
+}
+
+input {
+  background-color: #fff;
+  box-sizing: border-box;
+  box-shadow: #dddddd 2px 2px 5px;
+  padding: 1%;
+}
+
+input:active,
+input:focus {
+  outline: none !important;
+  border: 1px solid #dd5800;
+  box-shadow: 0 0 10px #719ece;
+}
+
+.left {
+  float: left;
+}
+
+.small {
+  width: 30%;
+  padding: 0.75%;
+}
+
+.medium {
+  width: 50%;
+}
+
+.large {
+  width: 80%;
+}
+
+.max {
+  width: 100%;
+}
+</style>
