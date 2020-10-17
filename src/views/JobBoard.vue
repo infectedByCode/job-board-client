@@ -15,24 +15,26 @@
       </span>
     </div>
     <ul>
-      <li v-for="job in jobs" :key="job.jobId" :class="$style.jobCard">
-        <h2>{{ job.jobTitle }}</h2>
-        <p>{{job.jobLocation || 'Manchester'}}</p>
-        <p>${{ job.salary }}</p>
-        <p>{{ job.companyName }}</p>
-        <p>Posted: {{ job.added }}</p>
-        <p>{{job.summary}}</p>
-        <button @click.prevent="loadJobDetails(job)">See</button>
-      </li>
+      <JobCard
+        v-for="job in jobs"
+        :key="job.jobId"
+        :class="$style.jobCard"
+        :job-details="job"
+        @loadJob="(payload) => loadJobDetails(payload)"
+      />
     </ul>
   </div>
 </template>
 <script>
 import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
+import JobCard from "../components/JobCard";
 
 export default {
   name: "Jobs",
+  components: {
+    JobCard
+  },
   props: {
     searchTerm: {
       type: String,
@@ -84,8 +86,9 @@ export default {
       if (text.length < 70) return text;
       return `${text.slice(0, 67)}...`;
     },
-    loadJobDetails(jobDetails) {
-      this.selectedJob = jobDetails;
+    loadJobDetails(payload) {
+      console.log(payload);
+      this.selectedJob = payload.job;
       this.showModal = true;
     }
   }
