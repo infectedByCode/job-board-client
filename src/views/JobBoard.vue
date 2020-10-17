@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- TODO: move to modal  -->
-    <div v-if="showModal && selectedJob" :class="$style.modal" @click.prevent="showModal = false">
+    <JobModal v-if="showModal && selectedJob" :class="$style.modal" @closeModal="showModal = false">
       <span>
         <h1>{{ selectedJob.jobTitle }}</h1>
         <p>
@@ -13,7 +12,7 @@
           cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.
         </p>
       </span>
-    </div>
+    </JobModal>
     <ul>
       <JobCard
         v-for="job in jobs"
@@ -29,11 +28,13 @@
 import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
 import JobCard from "../components/JobCard";
+import JobModal from "../components/JobModal";
 
 export default {
   name: "Jobs",
   components: {
-    JobCard
+    JobCard,
+    JobModal
   },
   props: {
     searchTerm: {
@@ -87,7 +88,6 @@ export default {
       return `${text.slice(0, 67)}...`;
     },
     loadJobDetails(payload) {
-      console.log(payload);
       this.selectedJob = payload.job;
       this.showModal = true;
     }
