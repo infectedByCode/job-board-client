@@ -1,7 +1,7 @@
 <template>
   <div>
     <label v-if="label" :for="name">{{label}}</label>
-    <input type="text" :class="[$style[size],$style[align]]" />
+    <input :type="type" :class="[$style[size],$style[align]]" @input="(e) => handleInput(e)" />
   </div>
 </template>
 
@@ -29,6 +29,16 @@ export default {
       required: true,
       default: "center",
       validator: value => ["left", "center", "right"].indexOf(value) !== -1
+    },
+    type: {
+      type: String,
+      default: "text",
+      validator: value => ["text", "password"].indexOf(value) !== -1
+    }
+  },
+  methods: {
+    handleInput(e) {
+      this.$emit("input", e.target.value);
     }
   }
 };
