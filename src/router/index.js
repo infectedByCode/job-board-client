@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Auth from '../views/Auth.vue';
 import Home from '../views/Home.vue';
 import JobBoard from '../views/JobBoard.vue';
 
@@ -16,6 +17,12 @@ const routes = [
     name: 'Job Board',
     component: JobBoard,
     props: true,
+  },
+  {
+    path: '/login',
+    alias: '/signup',
+    name: 'Auth',
+    component: Auth,
   },
 ];
 

@@ -2,11 +2,24 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link>|
-      <router-link to="/jobs">View Jobs</router-link>
+      <router-link to="/jobs">View Jobs</router-link>|
+      <router-link
+        :to="currentPath === '/login' ? '/signup' : '/login'"
+      >{{ currentPath === '/login' ? 'Signup' : 'Login' }}</router-link>
     </div>
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  computed: {
+    currentPath() {
+      return this.$route.path;
+    }
+  }
+};
+</script>
 
 <style>
 * {
