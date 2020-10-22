@@ -2,6 +2,7 @@
   <main>
     <!-- TODO: Add keywords -->
     <form>
+      <div style="min-height: 20px">{{ error ? error : null }}</div>
       <!-- TODO: extract radio set -->
       <fieldset :class="$style.accountType">
         <label for="jobseeker">Jobseeker</label>
@@ -85,6 +86,7 @@ export default {
   },
   data() {
     return {
+      error: null,
       accountType: null,
       email: null,
       password: null,
@@ -93,7 +95,11 @@ export default {
       surname: null,
       companyName: null,
       companyAddress: null,
-      companyPhone: null
+      companyPhone: null,
+      user: {
+        id: null,
+        token: null
+      }
     };
   },
   computed: {
@@ -102,8 +108,20 @@ export default {
     }
   },
   methods: {
+    resetForm() {
+      this.accountType = null;
+      this.email = null;
+      this.password = null;
+      this.confirmpw = null;
+      this.forename = null;
+      this.surname = null;
+      this.companyName = null;
+      this.companyAddress = null;
+      this.companyPhone = null;
+    },
     handleSubmit() {
-      const userId = "6778f925-d847-498a-89d6-1702fb3abbf7";
+      this.error = null;
+      const userId = this.user.id;
       const route =
         this.currentPath === `/login` ? "auth/login" : this.accountType;
       const data = {
@@ -113,18 +131,28 @@ export default {
         companyName: this.companyName,
         companyAddress: this.companyAddress,
         companyPhone: this.companyPhone,
-        role: this.accountType === "jobseekers" ? "jobseeker" : "company"
+        role: this.accountType === "jobseekers" ? "jobseeker" : "company",
+        userId,
+        email: this.email
       };
-      data[
-        this.accountType === "jobseekers" ? "jobseekerEmail" : "companyEmail"
-      ] = this.email;
-      axios
-        .post(`http://localhost:3000/${route}`, { ...data })
-        .then(response => {
-          if (response.status === 200 && response.data) {
-          }
-        })
-        .catch(err => console.log(err));
+      try {
+        axios
+          .post(`http://localhost:3000/${route}`, { ...data })
+          .then(response => {
+            console.log(response);
+            if (response.status === 200 && response.data) {
+              this.user.id = response.data.userId;
+              this.user.token = response.data.token;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            // TODO: handle err
+            this.error = err;
+          });
+      } finally {
+        this.resetForm();
+      }
     }
   }
 };
