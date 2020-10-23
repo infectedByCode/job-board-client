@@ -77,7 +77,10 @@
 
 <script>
 import axios from "axios";
+
 import TextInput from "../components/TextInput";
+
+import { mapActions } from "vuex";
 
 export default {
   name: "auth",
@@ -95,19 +98,19 @@ export default {
       surname: null,
       companyName: null,
       companyAddress: null,
-      companyPhone: null,
-      user: {
-        id: null,
-        token: null
-      }
+      companyPhone: null
     };
   },
   computed: {
+    currentUser() {
+      return this.$store.state.user;
+    },
     currentPath() {
       return this.$route.path;
     }
   },
   methods: {
+    ...mapActions({ updateUser: "updateUser" }),
     resetForm() {
       this.accountType = null;
       this.email = null;
@@ -121,7 +124,6 @@ export default {
     },
     handleSubmit() {
       this.error = null;
-      const userId = this.user.id;
       const route =
         this.currentPath === `/login` ? "auth/login" : this.accountType;
       const data = {
@@ -132,21 +134,25 @@ export default {
         companyAddress: this.companyAddress,
         companyPhone: this.companyPhone,
         role: this.accountType === "jobseekers" ? "jobseeker" : "company",
-        userId,
+        userId: this.currentUser.userId,
         email: this.email
       };
       try {
         axios
           .post(`http://localhost:3000/${route}`, { ...data })
           .then(response => {
-            console.log(response);
+            if (response.status === 201 && response.data) {
+              this.updateUser({ fields: ["id"], values: [response.data.ref] });
+            }
             if (response.status === 200 && response.data) {
-              this.user.id = response.data.userId;
-              this.user.token = response.data.token;
+              const { userId, token } = response.data;
+              this.updateUser({
+                fields: ["id", "token"],
+                values: [userId, token]
+              });
             }
           })
           .catch(err => {
-            console.log(err);
             // TODO: handle err
             this.error = err;
           });
