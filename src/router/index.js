@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Auth from '../views/Auth.vue';
 import Home from '../views/Home.vue';
 import JobBoard from '../views/JobBoard.vue';
+import Dashboard from '../views/Dashboard.vue';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     alias: '/signup',
     name: 'Auth',
     component: Auth,
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
   },
 ];
 

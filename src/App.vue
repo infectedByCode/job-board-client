@@ -4,8 +4,13 @@
       <router-link to="/">Home</router-link>|
       <router-link to="/jobs">View Jobs</router-link>|
       <router-link
+        v-if="this.$store.state.user.id === null"
         :to="currentPath === '/login' ? '/signup' : '/login'"
       >{{ currentPath === '/login' ? 'Signup' : 'Login' }}</router-link>
+      <router-link
+        v-if="this.$store.state.user.id && this.$store.state.user.token"
+        to="/dashboard"
+      >Dashboard</router-link>
     </div>
     <router-view />
   </div>
