@@ -1,8 +1,18 @@
 <template>
   <main>
     <!-- TODO: Add keywords -->
-    <form>
-      <div style="min-height: 20px">{{ error ? error : null }}</div>
+    <form @submit.stop>
+      <div :class="$style.messageWrapper">
+        <p
+          v-if="error"
+          :class="$style.error"
+        >We're having a problem with your {{ currentPath === "/login" ? 'login' : 'registration'}}.</p>
+        <p
+          v-else-if="success"
+          :class="$style.success"
+        >{{ currentPath === "/login" ? 'Logged in' : 'Registered'}} successfully.</p>
+        <p v-else :class="$style.message">Please complete the form.</p>
+      </div>
       <!-- TODO: extract radio set -->
       <fieldset :class="$style.accountType">
         <label for="jobseeker">Jobseeker</label>
@@ -89,7 +99,8 @@ export default {
   },
   data() {
     return {
-      error: null,
+      error: false,
+      success: false,
       accountType: null,
       email: null,
       password: null,
@@ -123,7 +134,9 @@ export default {
       this.companyPhone = null;
     },
     handleSubmit() {
-      this.error = null;
+      this.error = false;
+      this.success = false;
+
       const route =
         this.currentPath === `/login` ? "auth/login" : this.accountType;
       const data = {
@@ -151,10 +164,12 @@ export default {
                 values: [userId, token]
               });
             }
+            this.success = true;
+            this.$router.push({ name: "Dashboard" });
           })
           .catch(err => {
             // TODO: handle err
-            this.error = err;
+            this.error = true;
           });
       } finally {
         this.resetForm();
@@ -167,6 +182,27 @@ export default {
 <style module>
 fieldset {
   border: none;
+}
+
+.messageWrapper {
+  min-height: 20px;
+  margin: 10px 0;
+}
+
+.message {
+  padding: 5px;
+}
+
+.error {
+  background-color: hotpink;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.success {
+  background-color: lawngreen;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .accountType {
