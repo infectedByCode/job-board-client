@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { generateFakeJobs } from 'faker';
+import { fakeJobs } from './faker';
 
 export const handlers = [
   rest.get('/jobs', (_req, res, ctx) => {
@@ -7,7 +7,27 @@ export const handlers = [
       ctx.status(200),
       ctx.json({
         status: 200,
-        jobs: [generateFakeJobs(10)],
+        jobs: fakeJobs,
+      })
+    );
+  }),
+  rest.post('/jobseekers', (_req, res, ctx) => {
+    return res(
+      ctx.status(201),
+      ctx.json({
+        status: 201,
+        msg: 'jobseeker created',
+        ref: '1234',
+      })
+    );
+  }),
+  rest.post('/companies', (_req, res, ctx) => {
+    return res(
+      ctx.status(201),
+      ctx.json({
+        status: 201,
+        msg: 'Company successfully created',
+        ref: '1234',
       })
     );
   }),

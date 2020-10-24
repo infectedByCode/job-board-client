@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-export const generateFakeJobs = (num) => {
+const generateFakeJobs = (num) => {
   const jobs = [];
   for (let i = 0; i < num; i++) {
     const job = {
@@ -16,3 +16,5 @@ export const generateFakeJobs = (num) => {
   }
   return jobs;
 };
+
+export const fakeJobs = generateFakeJobs(10);
