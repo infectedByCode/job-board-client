@@ -152,7 +152,7 @@ export default {
       };
       try {
         axios
-          .post(`http://localhost:3000/${route}`, { ...data })
+          .post(`/${route}`, { ...data })
           .then(response => {
             if (response.status === 201 && response.data) {
               this.updateUser({ fields: ["id"], values: [response.data.ref] });
