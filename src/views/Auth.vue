@@ -152,7 +152,7 @@ export default {
       };
       try {
         axios
-          .post(`/${route}`, { ...data })
+          .post(`${process.env.VUE_APP_API_URL}/${route}`, { ...data })
           .then(response => {
             if (response.status === 201 && response.data) {
               this.updateUser({ fields: ["id"], values: [response.data.ref] });

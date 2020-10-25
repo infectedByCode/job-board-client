@@ -1,8 +1,9 @@
 import { rest } from 'msw';
 import { fakeJobs } from './faker';
+const { VUE_APP_API_URL } = process.env;
 
 export const handlers = [
-  rest.get('/jobs', (_req, res, ctx) => {
+  rest.get(`${VUE_APP_API_URL}/jobs`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -11,7 +12,7 @@ export const handlers = [
       })
     );
   }),
-  rest.post('/jobseekers', (_req, res, ctx) => {
+  rest.post(`${VUE_APP_API_URL}/jobseekers`, (_req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -21,7 +22,7 @@ export const handlers = [
       })
     );
   }),
-  rest.post('/companies', (_req, res, ctx) => {
+  rest.post(`${VUE_APP_API_URL}/companies`, (_req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -31,7 +32,7 @@ export const handlers = [
       })
     );
   }),
-  rest.post('/auth/login', (_req, res, ctx) => {
+  rest.post(`${VUE_APP_API_URL}/auth/login`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

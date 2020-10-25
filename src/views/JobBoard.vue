@@ -52,18 +52,20 @@ export default {
   created() {
     // TODO: extract out this logic
     if (this.searchTerm !== null) {
-      axios.get(`/jobs/search/${this.searchTerm}`).then(response => {
-        if (response.status === 200 && response.data) {
-          this.jobs = response.data.jobs;
-          this.jobs.map(job => {
-            job.added = this.formatDate(job.createdAt);
-            job.summary = this.formatRole(job.jobText);
-            return job;
-          });
-        }
-      });
+      axios
+        .get(`${process.env.VUE_APP_API_URL}/jobs/search/${this.searchTerm}`)
+        .then(response => {
+          if (response.status === 200 && response.data) {
+            this.jobs = response.data.jobs;
+            this.jobs.map(job => {
+              job.added = this.formatDate(job.createdAt);
+              job.summary = this.formatRole(job.jobText);
+              return job;
+            });
+          }
+        });
     } else {
-      axios.get("/jobs").then(response => {
+      axios.get(`${process.env.VUE_APP_API_URL}/jobs`).then(response => {
         if (response.status === 200 && response.data) {
           this.jobs = response.data.jobs;
           this.jobs.map(job => {
