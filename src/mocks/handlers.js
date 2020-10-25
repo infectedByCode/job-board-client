@@ -32,6 +32,17 @@ export const handlers = [
       })
     );
   }),
+  rest.get(`${VUE_APP_API_URL}/jobseekers/:jobseekerId`, (_req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        jobseekerForename: 'Po Po',
+        jobseekerSurname: 'Liang',
+        jobKeywords: 'developer,backend',
+        accountCreated: '2020-10-14 19:42:02',
+      })
+    );
+  }),
   rest.post(`${VUE_APP_API_URL}/auth/login`, (_req, res, ctx) => {
     return res(
       ctx.status(200),
