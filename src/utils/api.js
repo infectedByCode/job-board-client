@@ -22,9 +22,9 @@ export const fetchJobs = () => {
   });
 };
 
-export const fetchJobseekerInformation = (userId, token) => {
+export const fetchJobseekerInformation = (jobseekerId, token) => {
   return axios
-    .get(`${VUE_APP_API_URL}/jobseekers/${userId}`)
+    .get(`${VUE_APP_API_URL}/jobseekers/${jobseekerId}?token=${token}`)
     .then((result) => result.data)
     .catch((err) => err);
 };

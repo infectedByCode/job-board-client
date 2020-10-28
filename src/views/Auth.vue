@@ -149,9 +149,12 @@ export default {
         userId: this.currentUser.userId,
         email: this.email
       };
-      try {
-        const url = `${process.env.VUE_APP_API_URL}/${route}`;
-        handleUserAuth(url, data).then(response => {
+      const url = `${process.env.VUE_APP_API_URL}/${route}`;
+      handleUserAuth(url, data).then(response => {
+        if (response instanceof Error) {
+          // TODO: Handle error
+        }
+        try {
           if (response.status === 201 && response.data) {
             this.updateUser({ fields: ["id"], values: [response.data.ref] });
           }
@@ -162,12 +165,12 @@ export default {
               values: [userId, token]
             });
           }
-        });
-        this.success = true;
-        this.$router.push({ name: "Dashboard" });
-      } finally {
-        this.resetForm();
-      }
+          this.success = true;
+          this.$router.push({ name: "Dashboard" });
+        } finally {
+          this.resetForm();
+        }
+      });
     }
   }
 };
