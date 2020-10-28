@@ -1,7 +1,12 @@
 <template>
   <div>
     <label v-if="label" :for="name">{{label}}</label>
-    <input :type="type" :class="[$style[size],$style[align]]" @input="(e) => handleInput(e)" />
+    <input
+      v-model="input"
+      :type="type"
+      :class="[$style[size],$style[align]]"
+      @input="(e) => handleInput(e)"
+    />
   </div>
 </template>
 
@@ -34,6 +39,11 @@ export default {
       type: String,
       default: "text",
       validator: value => ["text", "password"].indexOf(value) !== -1
+    },
+    input: {
+      type: String,
+      required: true,
+      default: ""
     }
   },
   methods: {

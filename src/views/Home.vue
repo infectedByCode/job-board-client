@@ -1,8 +1,22 @@
 <template>
   <div>
     <form>
-      <TextInput v-model="jobType" name="jobType" size="max" label="What" align="left" />
-      <TextInput v-model="location" name="location" size="large" label="Where" align="left" />
+      <TextInput
+        v-model="jobType"
+        :input="jobType"
+        name="jobType"
+        size="max"
+        label="What"
+        align="left"
+      />
+      <TextInput
+        v-model="location"
+        :input="location"
+        name="location"
+        size="large"
+        label="Where"
+        align="left"
+      />
       <select>
         <option
           v-for="distance in distanceOptions"
