@@ -86,8 +86,7 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import { handleUserAuth } from "../utils/api";
 import TextInput from "../components/TextInput";
 
 import { mapActions } from "vuex";
@@ -151,26 +150,21 @@ export default {
         email: this.email
       };
       try {
-        axios
-          .post(`${process.env.VUE_APP_API_URL}/${route}`, { ...data })
-          .then(response => {
-            if (response.status === 201 && response.data) {
-              this.updateUser({ fields: ["id"], values: [response.data.ref] });
-            }
-            if (response.status === 200 && response.data) {
-              const { userId, token } = response.data;
-              this.updateUser({
-                fields: ["id", "token"],
-                values: [userId, token]
-              });
-            }
-            this.success = true;
-            this.$router.push({ name: "Dashboard" });
-          })
-          .catch(err => {
-            // TODO: handle err
-            this.error = true;
-          });
+        const url = `${process.env.VUE_APP_API_URL}/${route}`;
+        handleUserAuth(url, data).then(response => {
+          if (response.status === 201 && response.data) {
+            this.updateUser({ fields: ["id"], values: [response.data.ref] });
+          }
+          if (response.status === 200 && response.data) {
+            const { userId, token } = response.data;
+            this.updateUser({
+              fields: ["id", "token"],
+              values: [userId, token]
+            });
+          }
+        });
+        this.success = true;
+        this.$router.push({ name: "Dashboard" });
       } finally {
         this.resetForm();
       }

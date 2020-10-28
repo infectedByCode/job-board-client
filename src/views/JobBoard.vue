@@ -25,8 +25,8 @@
   </div>
 </template>
 <script>
-import axios from "axios";
 import { differenceInCalendarDays } from "date-fns";
+import { fetchJobs, fetchJobsBySearch } from "../utils/api";
 import JobCard from "../components/JobCard";
 import JobModal from "../components/JobModal";
 
@@ -50,30 +50,29 @@ export default {
     };
   },
   created() {
-    // TODO: extract out this logic
     if (this.searchTerm !== null) {
-      axios
-        .get(`${process.env.VUE_APP_API_URL}/jobs/search/${this.searchTerm}`)
-        .then(response => {
-          if (response.status === 200 && response.data) {
-            this.jobs = response.data.jobs;
-            this.jobs.map(job => {
-              job.added = this.formatDate(job.createdAt);
-              job.summary = this.formatRole(job.jobText);
-              return job;
-            });
-          }
-        });
-    } else {
-      axios.get(`${process.env.VUE_APP_API_URL}/jobs`).then(response => {
-        if (response.status === 200 && response.data) {
-          this.jobs = response.data.jobs;
-          this.jobs.map(job => {
-            job.added = this.formatDate(job.createdAt);
-            job.summary = this.formatRole(job.jobText);
-            return job;
-          });
+      fetchJobsBySearch(this.searchTerm).then(result => {
+        if (result instanceof Error) {
+          // TODO: Add error handler
         }
+        result.map(job => {
+          job.added = this.formatDate(job.createdAt);
+          job.summary = this.formatRole(job.jobText);
+          return job;
+        });
+        this.jobs = result;
+      });
+    } else {
+      fetchJobs().then(result => {
+        if (result instanceof Error) {
+          // TODO: Add error handler
+        }
+        result.map(job => {
+          job.added = this.formatDate(job.createdAt);
+          job.summary = this.formatRole(job.jobText);
+          return job;
+        });
+        this.jobs = result;
       });
     }
   },
@@ -129,7 +128,7 @@ ul {
 .jobCard {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: fl;
   text-align: left;
   background-color: #fff;
   box-shadow: #dddddd 2px 2px 5px;
