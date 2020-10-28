@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.loginForm">
     <form>
       <TextInput
         v-model="jobType"
@@ -61,19 +61,19 @@ export default {
 </script>
 
 <style module>
-form {
+.loginForm {
   height: 100%;
   width: 80%;
   margin: 0 auto;
   padding: 30% 0;
 }
 
-select {
+.loginForm select {
   width: 20%;
   float: right;
 }
 
-button {
+.loginForm button {
   background-color: #dd5800;
   display: block;
   width: 100%;

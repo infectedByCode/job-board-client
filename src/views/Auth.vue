@@ -1,7 +1,7 @@
 <template>
   <main>
     <!-- TODO: Add keywords -->
-    <form @submit.stop>
+    <form :class="$style.authForm" @submit.stop>
       <div :class="$style.messageWrapper">
         <p
           v-if="error"
@@ -179,6 +179,23 @@ export default {
 <style module>
 fieldset {
   border: none;
+}
+
+.authForm {
+  height: 100%;
+  width: 80%;
+  margin: 0 auto;
+  padding: 30% 0;
+}
+
+.authForm button {
+  background-color: #dd5800;
+  display: block;
+  width: 100%;
+  height: 30px;
+  margin: 15% auto;
+  padding: 1%;
+  border-radius: 6px;
 }
 
 .messageWrapper {

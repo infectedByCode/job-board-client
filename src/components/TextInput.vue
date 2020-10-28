@@ -5,6 +5,7 @@
       v-model="input"
       :type="type"
       :class="[$style[size],$style[align]]"
+      :disabled="disabled"
       @input="(e) => handleInput(e)"
     />
   </div>
@@ -44,6 +45,10 @@ export default {
       type: String,
       required: true,
       default: ""
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
