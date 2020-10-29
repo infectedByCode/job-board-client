@@ -3,6 +3,20 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+export const mutations = {
+  setUser(state, { fields, values }) {
+    fields.forEach((field, index) => {
+      state.user[field] = values[index];
+    });
+  },
+  unsetUser(state) {
+    const obj = state.user;
+    for (const field in obj) {
+      obj[field] = null;
+    }
+  },
+};
+
 export default new Vuex.Store({
   state: {
     user: {
@@ -10,18 +24,7 @@ export default new Vuex.Store({
       token: null,
     },
   },
-  mutations: {
-    setUser(state, { fields, values }) {
-      fields.forEach((field, index) => {
-        state.user[field] = values[index];
-      });
-    },
-    unsetUser(state) {
-      for (const field in { user }) {
-        user[field] = null;
-      }
-    },
-  },
+  mutations,
   actions: {
     updateUser(context, { fields, values }) {
       if (fields.length && values.length) {
