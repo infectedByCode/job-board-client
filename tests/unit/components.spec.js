@@ -1,12 +1,17 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
+
 import TextInput from '@/components/TextInput.vue';
+import JobModal from '@/components/JobModal.vue';
 import JobCard from '@/components/JobCard.vue';
 
 const factory = (component, options) => {
   return shallowMount(component, {
     propsData: {
       ...options?.propsData,
+    },
+    slots: {
+      ...options?.slots,
     },
   });
 };
@@ -85,6 +90,17 @@ describe('Components', () => {
       const wrapper = factory(JobCard, { propsData: { jobDetails } });
       wrapper.find('button').trigger('click');
       assert.deepStrictEqual(wrapper.emitted().loadJob[0][0].job, jobDetails);
+    });
+  });
+  describe('JobModal', () => {
+    it('renders given slots', () => {
+      const wrapper = factory(JobModal, { slots: { default: '<h1>Hello World</h1>' } });
+      assert.ok(wrapper.find('h1').text() === 'Hello World');
+    });
+    it('emits closeModal event when modal is clicked', () => {
+      const wrapper = factory(JobModal);
+      wrapper.trigger('click');
+      assert.exists(wrapper.emitted().closeModal);
     });
   });
 });
