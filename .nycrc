@@ -1,0 +1,6 @@
+{
+  "all": true,
+  "extension": [".vue"],
+  "include": ["src/*"],
+  "exclude": ["src/mocks/*"]
+}

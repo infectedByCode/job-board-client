@@ -25,4 +25,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# instabul
 .nyc_output/
+coverage/
