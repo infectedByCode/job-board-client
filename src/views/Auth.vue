@@ -23,6 +23,7 @@
       <TextInput
         v-if="currentPath === '/signup' && accountType === 'jobseekers'"
         v-model="forename"
+        :input="forename"
         name="forename"
         size="max"
         label="Forename"
@@ -31,6 +32,7 @@
       <TextInput
         v-if="currentPath === '/signup' && accountType === 'jobseekers'"
         v-model="surname"
+        :input="surname"
         name="surname"
         size="max"
         label="Surname"
@@ -39,6 +41,7 @@
       <TextInput
         v-if="currentPath === '/signup' && accountType === 'companies'"
         v-model="companyName"
+        :input="companyName"
         name="companyName"
         size="max"
         label="Company Name"
@@ -47,6 +50,7 @@
       <TextInput
         v-if="currentPath === '/signup' && accountType === 'companies'"
         v-model="companyAddress"
+        :input="companyAddress"
         name="companyAddress"
         size="max"
         label="Company Address"
@@ -55,14 +59,16 @@
       <TextInput
         v-if="currentPath === '/signup' && accountType === 'companies'"
         v-model="companyPhone"
+        :input="companyPhone"
         name="companyPhone"
         size="max"
         label="Company Phone"
         align="left"
       />
-      <TextInput v-model="email" name="email" size="max" label="Email" align="left" />
+      <TextInput v-model="email" :input="email" name="email" size="max" label="Email" align="left" />
       <TextInput
         v-model="password"
+        :input="password"
         name="password"
         size="max"
         label="Password"
@@ -72,6 +78,7 @@
       <TextInput
         v-if="currentPath === '/signup'"
         v-model="confirmpw"
+        :input="confirmpw"
         name="confirmpw"
         size="max"
         label="Confirm password"
@@ -152,7 +159,7 @@ export default {
       const url = `${process.env.VUE_APP_API_URL}/${route}`;
       handleUserAuth(url, data).then(response => {
         if (response instanceof Error) {
-          // TODO: Handle error
+          this.error = true;
         }
         try {
           if (response.status === 201 && response.data) {
@@ -165,12 +172,21 @@ export default {
               values: [userId, token]
             });
           }
-          this.success = true;
-          this.$router.push({ name: "Dashboard" });
+          if (this.currentUser.id) {
+            this.success = true;
+            this.$router.push({ name: "Dashboard" });
+          }
         } finally {
           this.resetForm();
         }
       });
+    }
+  },
+  watch: {
+    currentPath(value, oldValue) {
+      if (value !== oldValue) {
+        this.error = false;
+      }
     }
   }
 };
