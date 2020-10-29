@@ -34,7 +34,15 @@ export default {
   top: 0;
 }
 
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+  min-height: 100%;
+}
+
 #app {
+  height: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -43,11 +51,14 @@ export default {
 }
 
 #nav {
+  display: flex;
+  justify-content: end;
   padding: 30px;
   background-color: #3cbf0a;
 }
 
 #nav a {
+  padding: 0 2%;
   font-weight: bold;
   color: #2c3e50;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.loginForm">
+  <div :class="$style.searchForm">
     <form>
       <TextInput
         v-model="jobType"
@@ -61,19 +61,43 @@ export default {
 </script>
 
 <style module>
-.loginForm {
+.searchForm {
+  box-sizing: border-box;
   height: 100%;
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
-  padding: 30% 0;
+  padding: 20% 0;
+  background-image: url("../assets/developer.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.loginForm select {
+.searchForm > form {
+  width: 90%;
+  margin: 0 auto;
+  padding: 2.5% 5%;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.searchForm input {
+  min-height: 30px;
+}
+
+.searchForm select {
   width: 20%;
   float: right;
+  background: #fff;
+  line-height: 30px;
+  height: 30px;
 }
 
-.loginForm button {
+.searchForm select option {
+  position: relative;
+}
+
+.searchForm button {
   background-color: #dd5800;
   display: block;
   width: 100%;
@@ -81,5 +105,27 @@ export default {
   margin: 15% auto;
   padding: 1%;
   border-radius: 6px;
+}
+
+@media (min-width: 1023px) {
+  .searchForm > form > button {
+    height: auto;
+    margin: 5% auto;
+  }
+
+  .searchForm input {
+    max-height: 40px;
+  }
+
+  .searchForm > form > select {
+    min-height: 40px;
+  }
+}
+
+@media (min-width: 1399px) {
+  .searchForm {
+    padding: 10% 20%;
+    width: 100%;
+  }
 }
 </style>
