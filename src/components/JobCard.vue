@@ -6,12 +6,17 @@
     <p>{{ jobDetails.companyName }}</p>
     <p>Posted: {{ jobDetails.added }}</p>
     <p>{{jobDetails.summary}}</p>
-    <button @click.prevent="() => handleClick(jobDetails)">See</button>
+    <Button @click="() => handleClick(jobDetails)">Learn More</Button>
   </li>
 </template>
 
 <script>
+import Button from "@/components/Button.vue";
+
 export default {
+  components: {
+    Button
+  },
   props: {
     jobDetails: {
       type: Object,

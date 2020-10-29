@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.jobBoard">
     <JobModal v-if="showModal && selectedJob" :class="$style.modal" @closeModal="showModal = false">
       <span>
         <h1>{{ selectedJob.jobTitle }}</h1>
@@ -94,10 +94,12 @@ export default {
 };
 </script>
 <style module>
-body {
+.jobBoard {
   background-color: #f2f2f2;
+  overflow-y: scroll;
 }
-ul {
+
+.jobBoard ul {
   padding: 0;
 }
 
@@ -128,24 +130,31 @@ ul {
 .jobCard {
   display: flex;
   flex-direction: column;
-  justify-content: fl;
+  justify-content: center;
   text-align: left;
   background-color: #fff;
   box-shadow: #dddddd 2px 2px 5px;
   margin: 10px auto;
-  padding: 2.5% 7.5%;
-  height: 300px;
+  padding: 7.5%;
+  height: 200px;
   width: 80%;
   border-radius: 6px;
   list-style: none;
 }
 
 .jobCard > button {
-  background-color: #ddd;
+  margin: 0 auto;
 }
 
 .jobCard > h2,
 .jobCard > p {
-  margin: 0;
+  margin: 0 0 5px 0;
+}
+
+@media (min-width: 1023px) {
+  .jobBoard {
+    width: 60%;
+    margin: 0 auto;
+  }
 }
 </style>

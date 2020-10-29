@@ -32,27 +32,31 @@ export default {
   padding: 0;
   left: 0;
   top: 0;
+  bottom: 0;
+  right: 0;
 }
 
-html,
-body {
-  overflow: hidden;
+html {
   height: 100%;
+}
+
+body {
   min-height: 100%;
 }
 
 #app {
-  height: 100%;
+  position: fixed;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  overflow-y: auto;
 }
 
 #nav {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 30px;
   background-color: #3cbf0a;
 }

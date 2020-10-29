@@ -24,17 +24,19 @@
           :value="distance.value"
         >{{distance.text}}</option>
       </select>
-      <button @click.prevent="handleSubmit">Search</button>
+      <Button @click="handleSubmit">Search</Button>
     </form>
   </div>
 </template>
 
 <script>
-import TextInput from "../components/TextInput";
+import Button from "@/components/Button";
+import TextInput from "@/components/TextInput";
 
 export default {
   name: "Home",
   components: {
+    Button,
     TextInput
   },
   data() {
@@ -62,7 +64,6 @@ export default {
 
 <style module>
 .searchForm {
-  box-sizing: border-box;
   height: 100%;
   width: 100%;
   margin: 0 auto;
@@ -95,16 +96,6 @@ export default {
 
 .searchForm select option {
   position: relative;
-}
-
-.searchForm button {
-  background-color: #dd5800;
-  display: block;
-  width: 100%;
-  height: 30px;
-  margin: 15% auto;
-  padding: 1%;
-  border-radius: 6px;
 }
 
 @media (min-width: 1023px) {
