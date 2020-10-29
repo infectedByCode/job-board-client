@@ -115,7 +115,7 @@ export default {
 
 @media (min-width: 1399px) {
   .searchForm {
-    padding: 10% 20%;
+    padding: 10% 0;
     width: 100%;
   }
 }
