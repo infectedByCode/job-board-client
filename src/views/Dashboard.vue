@@ -17,7 +17,8 @@
             :disabled="!edit"
             align="left"
           />
-          <button @click.prevent="handleUpdate">{{edit ? "Save Changes" : "Edit Details"}}</button>
+          <Button @click="handleUpdate">{{edit ? "Save Changes" : "Edit Details"}}</Button>
+          <Button type="danger" @click="handleDelete">Delete Account</Button>
         </form>
       </section>
       <section :class="$style.applications">
@@ -35,12 +36,17 @@
 import {
   fetchJobseekerInformation,
   fetchApplicationsById,
-  updateUserById
+  updateUserById,
+  deleteUserById
 } from "../utils/api";
+import Button from "../components/Button";
 import TextInput from "../components/TextInput";
+
+import { mapActions } from "vuex";
 
 export default {
   components: {
+    Button,
     TextInput
   },
   data() {
@@ -100,6 +106,7 @@ export default {
       });
   },
   methods: {
+    ...mapActions({ updateUser: "updateUser" }),
     setInfo(msg, error = false) {
       this.info.msg = msg;
       this.info.isError = error;
@@ -109,24 +116,42 @@ export default {
     },
     handleUpdate() {
       if (this.edit) {
-        this.updateUser();
+        const { id, token } = this.currentUser;
+        updateUserById(id, token, this.userDetails)
+          .then(response => {
+            if (response.status !== 200) {
+              const msg =
+                "We're unable to update your information at this time";
+              this.setInfo(msg, true);
+            } else {
+              this.setInfo("Information updated successfully");
+            }
+          })
+          .catch(err => {
+            if (err) {
+              const msg =
+                "We're unable to update your information at this time";
+              this.setInfo(msg, true);
+            }
+          });
       }
       this.edit = !this.edit;
     },
-    updateUser() {
+    handleDelete() {
       const { id, token } = this.currentUser;
-      updateUserById(id, token, this.userDetails)
-        .then(data => {
-          if (data.status !== 200) {
-            const msg = "We're unable to update your information at this time";
+      deleteUserById(id, token)
+        .then(response => {
+          if (response.status !== 204) {
+            const msg = "Please contact us to delete your account.";
             this.setInfo(msg, true);
           } else {
-            this.setInfo("Information updated successfully");
+            this.updateUser({ fields: [], values: [] });
+            this.$router.push({ name: "Home" });
           }
         })
         .catch(err => {
           if (err) {
-            const msg = "We're unable to update your information at this time";
+            const msg = "Please contact us to delete your account.";
             this.setInfo(msg, true);
           }
         });
@@ -167,13 +192,11 @@ export default {
 }
 
 .sidebar button {
-  background-color: #dd5800;
-  display: block;
-  width: 100%;
-  height: 30px;
-  margin: 15% auto;
-  padding: 1%;
-  border-radius: 6px;
+  margin: 10px auto;
+}
+
+.sidebar button:first-of-type {
+  margin-top: 50px;
 }
 
 .applications ul {

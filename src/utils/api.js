@@ -36,6 +36,13 @@ export const updateUserById = (id, token, data) => {
     .catch((err) => err);
 };
 
+export const deleteUserById = (id, token) => {
+  return axios
+    .delete(`${VUE_APP_API_URL}/jobseekers/${id}?token=${token}`)
+    .then((result) => result)
+    .catch((err) => err);
+};
+
 export const fetchApplicationsById = (id, token) => {
   return axios
     .get(`${VUE_APP_API_URL}/applications/jobseeker/${id}?token=${token}`)
