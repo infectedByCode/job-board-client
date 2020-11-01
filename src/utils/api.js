@@ -29,6 +29,20 @@ export const fetchJobseekerInformation = (jobseekerId, token) => {
     .catch((err) => err);
 };
 
+export const updateUserById = (id, token, data) => {
+  return axios
+    .patch(`${VUE_APP_API_URL}/jobseekers/${id}?token=${token}`, data)
+    .then((result) => result.data)
+    .catch((err) => err);
+};
+
+export const fetchApplicationsById = (id, token) => {
+  return axios
+    .get(`${VUE_APP_API_URL}/applications/jobseeker/${id}?token=${token}`)
+    .then((result) => result.data)
+    .catch((err) => err);
+};
+
 export const handleUserAuth = (url, data) => {
   return axios
     .post(url, { ...data })
