@@ -4,8 +4,8 @@
     <main :class="$style.dashboard">
       <section :class="$style.sidebar">
         <img src="../assets/logo.png" alt="profile image" />
-        <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
         <form @submit.stop>
+          <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
           <TextInput
             v-for="(value, key) in userDetails"
             :key="key"
@@ -103,6 +103,9 @@ export default {
     setInfo(msg, error = false) {
       this.info.msg = msg;
       this.info.isError = error;
+      // reset information after given time
+      const self = this;
+      setTimeout(() => (self.info.msg = null), 5000);
     },
     handleUpdate() {
       if (this.edit) {
@@ -142,12 +145,14 @@ export default {
 .error {
   background-color: hotpink;
   padding: 5px;
+  margin: 5px 0;
   border-radius: 5px;
 }
 
 .success {
   background-color: lawngreen;
   padding: 5px;
+  margin: 5px 0;
   border-radius: 5px;
 }
 
