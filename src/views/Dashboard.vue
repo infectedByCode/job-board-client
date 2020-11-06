@@ -3,7 +3,7 @@
     <h1>WELCOME TO YOUR DASHBOARD</h1>
     <main :class="$style.dashboard">
       <section :class="$style.sidebar">
-        <img src="../assets/logo.png" alt="profile image" />
+        <img src alt="profile image" />
         <form @submit.stop>
           <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
           <TextInput
@@ -20,6 +20,26 @@
           <Button @click="handleUpdate">{{edit ? "Save Changes" : "Edit Details"}}</Button>
           <Button type="danger" @click="handleDelete">Delete Account</Button>
         </form>
+        <form @submit.stop>
+          <TextInput
+            v-model="keywordInput"
+            name="keywordInput"
+            size="max"
+            label="Add new keyword"
+            align="left"
+            :disabled="keywords.length > 5"
+          />
+          <Button @click="handleKeywordUpdate">Add Keyword</Button>
+        </form>
+        <br />
+        <br />
+        <ul :class="$style.keywords">
+          <li
+            v-for="(keyword, index) in keywords"
+            :key="index"
+            @click="() => handleDeleteKeyword(index)"
+          >{{ keyword }}</li>
+        </ul>
       </section>
       <section :class="$style.applications">
         <h3>Application History</h3>
@@ -56,6 +76,7 @@ export default {
         msg: ""
       },
       edit: false,
+      keywordInput: null,
       userDetails: {},
       applications: []
     };
@@ -63,6 +84,9 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user;
+    },
+    keywords() {
+      return this.userDetails.jobKeywords.split(",") || [];
     }
   },
   created() {
@@ -79,6 +103,13 @@ export default {
 
         if (jobseeker) {
           this.userDetails = jobseeker;
+          const {
+            jobseekerId,
+            jobseekerForename,
+            jobseekerSurname,
+            jobKeywords,
+            accountCreated
+          } = jobseeker;
         }
       })
       .catch(err => {
@@ -114,8 +145,8 @@ export default {
       const self = this;
       setTimeout(() => (self.info.msg = null), 5000);
     },
-    handleUpdate() {
-      if (this.edit) {
+    handleUpdate(forceUpdate = false) {
+      if (this.edit || forceUpdate) {
         const { id, token } = this.currentUser;
         updateUserById(id, token, this.userDetails)
           .then(response => {
@@ -155,6 +186,16 @@ export default {
             this.setInfo(msg, true);
           }
         });
+    },
+    handleKeywordUpdate() {
+      this.userDetails.jobKeywords += `,${this.keywordInput}`;
+      this.handleUpdate(true);
+    },
+    handleDeleteKeyword(index) {
+      const newKeywords = [...this.keywords];
+      newKeywords.splice(index, 1);
+      this.userDetails.jobKeywords = newKeywords.join(",");
+      this.handleUpdate(true);
     }
   }
 };
@@ -197,6 +238,17 @@ export default {
 
 .sidebar button:first-of-type {
   margin-top: 50px;
+}
+
+.keywords {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.keywords > li {
+  list-style: none;
+  background: #fff;
+  margin: 2.5%;
 }
 
 .applications ul {
