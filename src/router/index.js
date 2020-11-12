@@ -5,6 +5,8 @@ import Home from '../views/Home.vue';
 import JobBoard from '../views/JobBoard.vue';
 import Dashboard from '../views/Dashboard.vue';
 
+import store from '../store';
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,6 +31,9 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -36,6 +41,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const { id, token } = store.state.user;
+    if (!id || !token) {
+      next({
+        path: '/login',
+        params: { nextUrl: to.fullPath },
+      });
+    } else next();
+  } else next();
 });
 
 export default router;
