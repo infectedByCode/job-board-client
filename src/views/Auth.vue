@@ -145,6 +145,7 @@ export default {
 
       const route =
         this.currentPath === `/login` ? "auth/login" : this.accountType;
+      const role = this.accountType === "jobseekers" ? "jobseeker" : "company";
       const data = {
         password: this.password,
         jobseekerForename: this.forename,
@@ -152,7 +153,7 @@ export default {
         companyName: this.companyName,
         companyAddress: this.companyAddress,
         companyPhone: this.companyPhone,
-        role: this.accountType === "jobseekers" ? "jobseeker" : "company",
+        role,
         userId: this.currentUser.userId,
         email: this.email
       };
@@ -168,8 +169,8 @@ export default {
           if (response.status === 200 && response.data) {
             const { userId, token } = response.data;
             this.updateUser({
-              fields: ["id", "token"],
-              values: [userId, token]
+              fields: ["id", "token", "role"],
+              values: [userId, token, role]
             });
           }
           if (this.currentUser.id) {

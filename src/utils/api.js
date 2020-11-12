@@ -22,30 +22,33 @@ export const fetchJobs = () => {
   });
 };
 
-export const fetchJobseekerInformation = (jobseekerId, token) => {
+export const fetchUserInformation = (role, jobseekerId, token) => {
+  const route = role === 'company' ? 'companies' : 'jobseekers';
   return axios
-    .get(`${VUE_APP_API_URL}/jobseekers/${jobseekerId}?token=${token}`)
+    .get(`${VUE_APP_API_URL}/${route}/${jobseekerId}?token=${token}`)
     .then((result) => result.data)
     .catch((err) => err);
 };
 
-export const updateUserById = (id, token, data) => {
+export const updateUserById = (role, id, token, data) => {
+  const route = role === 'company' ? 'companies' : 'jobseekers';
   return axios
-    .patch(`${VUE_APP_API_URL}/jobseekers/${id}?token=${token}`, data)
+    .patch(`${VUE_APP_API_URL}/${route}/${id}?token=${token}`, data)
     .then((result) => result.data)
     .catch((err) => err);
 };
 
-export const deleteUserById = (id, token) => {
+export const deleteUserById = (role, id, token) => {
+  const route = role === 'company' ? 'companies' : 'jobseekers';
   return axios
-    .delete(`${VUE_APP_API_URL}/jobseekers/${id}?token=${token}`)
+    .delete(`${VUE_APP_API_URL}/${route}/${id}?token=${token}`)
     .then((result) => result)
     .catch((err) => err);
 };
 
-export const fetchApplicationsById = (id, token) => {
+export const fetchApplicationsById = (role, id, token) => {
   return axios
-    .get(`${VUE_APP_API_URL}/applications/jobseeker/${id}?token=${token}`)
+    .get(`${VUE_APP_API_URL}/applications/${role}/${id}?token=${token}`)
     .then((result) => result.data)
     .catch((err) => err);
 };

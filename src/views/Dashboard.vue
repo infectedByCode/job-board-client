@@ -20,33 +20,40 @@
           <Button @click="handleUpdate">{{edit ? "Save Changes" : "Edit Details"}}</Button>
           <Button type="danger" @click="handleDelete">Delete Account</Button>
         </form>
-        <form @submit.stop>
-          <TextInput
-            v-model="keywordInput"
-            name="keywordInput"
-            size="max"
-            label="Add new keyword"
-            align="left"
-            :disabled="keywords.length > 5"
-          />
-          <Button @click="handleKeywordUpdate">Add Keyword</Button>
-        </form>
-        <br />
-        <br />
-        <ul :class="$style.keywords">
-          <li
-            v-for="(keyword, index) in keywords"
-            :key="index"
-            @click="() => handleDeleteKeyword(index)"
-          >{{ keyword }}</li>
-        </ul>
+        <div v-if="keywords">
+          <form @submit.stop>
+            <TextInput
+              v-model="keywordInput"
+              name="keywordInput"
+              size="max"
+              label="Add new keyword"
+              align="left"
+              :disabled="keywords.length > 5"
+            />
+            <Button @click="handleKeywordUpdate">Add Keyword</Button>
+          </form>
+          <br />
+          <br />
+          <ul :class="$style.keywords">
+            <li
+              v-for="(keyword, index) in keywords"
+              :key="index"
+              @click="() => handleDeleteKeyword(index)"
+            >{{ keyword }}</li>
+          </ul>
+        </div>
       </section>
       <section :class="$style.applications">
         <h3>Application History</h3>
         <ul v-if="applications.length">
           <li v-for="(application, index) in applications" :key="index"></li>
         </ul>
-        <p v-else>You have not applied to any roles yet. Search for your perfect job here!</p>
+        <p v-else>
+          {{ currentUser.role === "company"
+          ? "You have no job applications received."
+          : "You have not applied to any roles yet. Search for your perfect job here!"
+          }}
+        </p>
       </section>
     </main>
   </div>
@@ -54,7 +61,7 @@
 
 <script>
 import {
-  fetchJobseekerInformation,
+  fetchUserInformation,
   fetchApplicationsById,
   updateUserById,
   deleteUserById
@@ -86,21 +93,22 @@ export default {
       return this.$store.state.user;
     },
     keywords() {
-      return this.userDetails.jobKeywords.split(",") || [];
+      return this.currentUser.role === "jobseeker"
+        ? this.userDetails.jobKeywords.split(",") || []
+        : null;
     }
   },
   created() {
     // TODO: make more dynamic to work with companies too
     // Fetch user information
-    const { id, token } = this.$store.state.user;
-    fetchJobseekerInformation(id, token)
+    const { id, token, role } = this.$store.state.user;
+    fetchUserInformation(role, id, token)
       .then(data => {
         const { jobseeker, company } = data;
         if (data instanceof Error) {
           const msg = "We're experiencing a problem getting your information.";
           this.setInfo(msg, true);
         }
-
         if (jobseeker) {
           this.userDetails = jobseeker;
           const {
@@ -111,6 +119,9 @@ export default {
             accountCreated
           } = jobseeker;
         }
+        if (company) {
+          this.userDetails = company;
+        }
       })
       .catch(err => {
         if (err) {
@@ -119,7 +130,7 @@ export default {
         }
       });
     // Fetch applications
-    fetchApplicationsById(id, token)
+    fetchApplicationsById(role, id, token)
       .then(data => {
         if (data instanceof Error) {
           const msg = "We're experiencing a problem getting your information.";
@@ -142,13 +153,12 @@ export default {
       this.info.msg = msg;
       this.info.isError = error;
       // reset information after given time
-      const self = this;
-      setTimeout(() => (self.info.msg = null), 5000);
+      setTimeout(() => (this.info.msg = null), 5000);
     },
     handleUpdate(forceUpdate = false) {
       if (this.edit || forceUpdate) {
-        const { id, token } = this.currentUser;
-        updateUserById(id, token, this.userDetails)
+        const { id, token, role } = this.currentUser;
+        updateUserById(role, id, token, this.userDetails)
           .then(response => {
             if (response.status !== 200) {
               const msg =
@@ -169,8 +179,8 @@ export default {
       this.edit = !this.edit;
     },
     handleDelete() {
-      const { id, token } = this.currentUser;
-      deleteUserById(id, token)
+      const { id, token, role } = this.currentUser;
+      deleteUserById(role, id, token)
         .then(response => {
           if (response.status !== 204) {
             const msg = "Please contact us to delete your account.";
