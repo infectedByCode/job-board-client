@@ -1,5 +1,6 @@
 <template>
   <main>
+    <Loader :loading="loading" />
     <!-- TODO: Add keywords -->
     <form :class="$style.authForm" @submit.stop>
       <div :class="$style.messageWrapper">
@@ -94,6 +95,7 @@
 
 <script>
 import { handleUserAuth } from "../utils/api";
+import Loader from "../components/Loader";
 import TextInput from "../components/TextInput";
 
 import { mapActions } from "vuex";
@@ -101,10 +103,12 @@ import { mapActions } from "vuex";
 export default {
   name: "auth",
   components: {
+    Loader,
     TextInput
   },
   data() {
     return {
+      loading: false,
       error: false,
       success: false,
       accountType: null,
@@ -142,6 +146,7 @@ export default {
     handleSubmit() {
       this.error = false;
       this.success = false;
+      this.loading = true;
 
       const route =
         this.currentPath === `/login` ? "auth/login" : this.accountType;
@@ -174,11 +179,13 @@ export default {
             });
           }
           if (this.currentUser.id) {
+            this.loading = false;
             this.success = true;
             this.$router.push({ name: "Dashboard" });
           }
         } finally {
           this.resetForm();
+          this.loading = false;
         }
       });
     }

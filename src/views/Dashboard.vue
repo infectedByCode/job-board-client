@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loader :loading="loading" />
     <h1>WELCOME TO YOUR DASHBOARD</h1>
     <main :class="$style.dashboard">
       <section :class="$style.sidebar">
@@ -67,6 +68,7 @@ import {
   deleteUserById
 } from "../utils/api";
 import Button from "../components/Button";
+import Loader from "../components/Loader";
 import TextInput from "../components/TextInput";
 
 import { mapActions } from "vuex";
@@ -74,10 +76,12 @@ import { mapActions } from "vuex";
 export default {
   components: {
     Button,
+    Loader,
     TextInput
   },
   data() {
     return {
+      loading: true,
       info: {
         isError: false,
         msg: ""
@@ -99,7 +103,7 @@ export default {
     }
   },
   created() {
-    // TODO: make more dynamic to work with companies too
+    this.loading = true;
     // Fetch user information
     const { id, token, role } = this.$store.state.user;
     fetchUserInformation(role, id, token)
@@ -122,11 +126,13 @@ export default {
         if (company) {
           this.userDetails = company;
         }
+        this.loading = false;
       })
       .catch(err => {
         if (err) {
           const msg = "We're experiencing a problem getting your information.";
           this.setInfo(msg, true);
+          this.loading = false;
         }
       });
     // Fetch applications
@@ -157,6 +163,7 @@ export default {
     },
     handleUpdate(forceUpdate = false) {
       if (this.edit || forceUpdate) {
+        this.loading = true;
         const { id, token, role } = this.currentUser;
         updateUserById(role, id, token, this.userDetails)
           .then(response => {
@@ -177,6 +184,7 @@ export default {
           });
       }
       this.edit = !this.edit;
+      this.loading = false;
     },
     handleDelete() {
       const { id, token, role } = this.currentUser;
