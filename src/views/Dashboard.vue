@@ -97,9 +97,10 @@ export default {
       return this.$store.state.user;
     },
     keywords() {
-      return this.currentUser.role === "jobseeker"
-        ? this.userDetails.jobKeywords.split(",") || []
-        : null;
+      return this.currentUser.role === "jobseeker" &&
+        this.userDetails.jobKeywords.length > 1
+        ? this.userDetails.jobKeywords.split(",")
+        : [];
     }
   },
   created() {
@@ -206,7 +207,9 @@ export default {
         });
     },
     handleKeywordUpdate() {
-      this.userDetails.jobKeywords += `,${this.keywordInput}`;
+      this.userDetails.jobKeywords.length === 0
+        ? (this.userDetails.jobKeywords = this.keywordInput)
+        : (this.userDetails.jobKeywords += `,${this.keywordInput}`);
       this.handleUpdate(true);
     },
     handleDeleteKeyword(index) {
