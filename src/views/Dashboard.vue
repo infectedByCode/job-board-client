@@ -33,8 +33,6 @@
             />
             <Button @click="handleKeywordUpdate">Add Keyword</Button>
           </form>
-          <br />
-          <br />
           <ul :class="$style.keywords">
             <li
               v-for="(keyword, index) in keywords"
@@ -184,7 +182,7 @@ export default {
             }
           });
       }
-      this.edit = !this.edit;
+      this.edit = false;
       this.loading = false;
     },
     handleDelete() {
@@ -211,6 +209,7 @@ export default {
         ? (this.userDetails.jobKeywords = this.keywordInput)
         : (this.userDetails.jobKeywords += `,${this.keywordInput}`);
       this.handleUpdate(true);
+      this.keywordInput = "";
     },
     handleDeleteKeyword(index) {
       const newKeywords = [...this.keywords];
@@ -247,7 +246,8 @@ export default {
   background-color: #bbb;
 }
 
-.sidebar > form {
+.sidebar > form,
+.sidebar > div > form {
   height: auto;
   width: 80%;
   margin: 0 auto;
@@ -263,13 +263,17 @@ export default {
 
 .keywords {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto;
+  width: 80%;
+  margin: 2.5% auto;
 }
 
 .keywords > li {
   list-style: none;
   background: #fff;
   margin: 2.5%;
+  padding: 2.5%;
+  border-radius: 5px;
 }
 
 .applications ul {
