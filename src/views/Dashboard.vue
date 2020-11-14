@@ -1,12 +1,12 @@
 <template>
   <div>
     <Loader :loading="loading" />
-    <h1>WELCOME TO YOUR DASHBOARD</h1>
-    <main :class="$style.dashboard">
+    <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
+    <main v-if="isError === false" :class="$style.dashboard">
+      <h1>WELCOME TO YOUR DASHBOARD</h1>
       <section :class="$style.sidebar">
         <img src alt="profile image" />
         <form @submit.stop>
-          <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
           <TextInput
             v-for="(value, key) in userDetails"
             :key="key"
@@ -106,13 +106,21 @@ export default {
     this.loading = true;
     // Fetch user information
     const { id, token, role } = this.$store.state.user;
-    fetchUserInformation(role, id, token)
-      .then(data => {
-        const { jobseeker, company } = data;
-        if (data instanceof Error) {
+    fetchUserInformation(role, id, "z")
+      .then(response => {
+        if (response.status === 403) {
+          const msg =
+            "Your session has expired. You'll be redirected to the login page.";
+          this.setInfo(msg, true);
+          setTimeout(() => {
+            this.updateUser({ fields: [], values: [] });
+            this.$router.push({ name: "Auth" });
+          }, 5000);
+        } else if (response.status !== 200) {
           const msg = "We're experiencing a problem getting your information.";
           this.setInfo(msg, true);
         }
+        const { jobseeker, company } = response;
         if (jobseeker) {
           this.userDetails = jobseeker;
           if (this.userDetails.jobKeywords === null)
@@ -236,18 +244,20 @@ export default {
   height: 100%;
 }
 
+.error,
+.success {
+  padding: 5px;
+  margin: 5px auto;
+  border-radius: 5px;
+  width: 80%;
+}
+
 .error {
   background-color: hotpink;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 5px;
 }
 
 .success {
   background-color: lawngreen;
-  padding: 5px;
-  margin: 5px 0;
-  border-radius: 5px;
 }
 
 .sidebar {

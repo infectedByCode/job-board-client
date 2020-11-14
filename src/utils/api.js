@@ -27,7 +27,7 @@ export const fetchUserInformation = (role, jobseekerId, token) => {
   return axios
     .get(`${VUE_APP_API_URL}/${route}/${jobseekerId}?token=${token}`)
     .then((result) => result.data)
-    .catch((err) => err);
+    .catch((err) => err.response);
 };
 
 export const updateUserById = (role, id, token, data) => {
