@@ -112,14 +112,14 @@ export default {
       error: false,
       success: false,
       accountType: null,
-      email: null,
-      password: null,
-      confirmpw: null,
-      forename: null,
-      surname: null,
-      companyName: null,
-      companyAddress: null,
-      companyPhone: null
+      email: "",
+      password: "",
+      confirmpw: "",
+      forename: "",
+      surname: "",
+      companyName: "",
+      companyAddress: "",
+      companyPhone: ""
     };
   },
   computed: {

@@ -41,8 +41,8 @@ export default {
   },
   data() {
     return {
-      jobType: null,
-      location: null
+      jobType: "",
+      location: ""
     };
   },
   computed: {

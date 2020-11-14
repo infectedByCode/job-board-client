@@ -2,7 +2,7 @@
   <div>
     <label v-if="label" :for="name">{{label}}</label>
     <input
-      v-model="textInput"
+      :value="input"
       :type="type"
       :class="[$style[size],$style[align]]"
       :disabled="disabled"
@@ -51,11 +51,6 @@ export default {
       default: false,
       validator: value => [true, false].indexOf(value) !== -1
     }
-  },
-  data() {
-    return {
-      textInput: this.input
-    };
   },
   methods: {
     handleInput(e) {
