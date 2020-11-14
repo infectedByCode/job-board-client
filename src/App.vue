@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <a v-if="currentPath === '/'" class="skip" href="/jobs">Skip to Content</a>
     <div id="nav">
       <router-link to="/">Home</router-link>|
       <router-link to="/jobs">View Jobs</router-link>|
@@ -44,6 +45,31 @@ body {
   min-height: 100%;
 }
 
+.skip {
+  position: absolute;
+  height: 18px;
+  width: 100%;
+  padding-bottom: 5px;
+  color: #fff;
+  background-color: #3cbf0a;
+  transform: translateX(-100%);
+}
+
+.skip:focus,
+.skip:active {
+  outline: none !important;
+  border: 1px solid #2182eb;
+  box-shadow: 0px 0 5px #2182eb;
+  transform: translateX(0%);
+  animation: float-right 0.5s;
+}
+
+a:focus {
+  outline: none !important;
+  border-color: #2182eb;
+  box-shadow: 0px 0 5px #2182eb;
+}
+
 #app {
   position: fixed;
   font-family: Helvetica, Arial, sans-serif;
@@ -69,5 +95,22 @@ body {
 
 #nav a.router-link-exact-active {
   color: #fff;
+}
+
+@media (min-width: 500px) {
+  .skip {
+    width: 200px;
+    padding: 30px;
+  }
+}
+
+@keyframes float-right {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
 }
 </style>
