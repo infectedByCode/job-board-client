@@ -18,7 +18,7 @@
             :disabled="!edit"
             align="left"
           />
-          <Button @click="handleUpdate">{{edit ? "Save Changes" : "Edit Details"}}</Button>
+          <Button @click="handleUpdate">{{ edit ? "Save Changes" : "Edit Details" }}</Button>
           <Button type="danger" @click="handleDelete">Delete Account</Button>
         </form>
         <div v-if="keywords">
@@ -26,6 +26,7 @@
             <TextInput
               v-model="keywordInput"
               name="keywordInput"
+              :input="keywordInput"
               size="max"
               label="Add new keyword"
               align="left"
@@ -96,7 +97,7 @@ export default {
     },
     keywords() {
       return this.currentUser.role === "jobseeker" &&
-        this.userDetails.jobKeywords.length > 1
+        this.userDetails.jobKeywords
         ? this.userDetails.jobKeywords.split(",")
         : [];
     }
@@ -114,6 +115,8 @@ export default {
         }
         if (jobseeker) {
           this.userDetails = jobseeker;
+          if (this.userDetails.jobKeywords === null)
+            this.userDetails.jobKeywords = "";
           const {
             jobseekerId,
             jobseekerForename,
@@ -164,26 +167,31 @@ export default {
       if (this.edit || forceUpdate) {
         this.loading = true;
         const { id, token, role } = this.currentUser;
-        updateUserById(role, id, token, this.userDetails)
-          .then(response => {
-            if (response.status !== 200) {
-              const msg =
-                "We're unable to update your information at this time";
-              this.setInfo(msg, true);
-            } else {
-              this.setInfo("Information updated successfully");
-            }
-          })
-          .catch(err => {
-            if (err) {
-              const msg =
-                "We're unable to update your information at this time";
-              this.setInfo(msg, true);
-            }
-          });
+        try {
+          updateUserById(role, id, token, this.userDetails)
+            .then(response => {
+              if (response.status !== 200) {
+                const msg =
+                  "We're unable to update your information at this time";
+                this.setInfo(msg, true);
+              } else {
+                this.setInfo("Information updated successfully");
+              }
+            })
+            .catch(err => {
+              if (err) {
+                const msg =
+                  "We're unable to update your information at this time";
+                this.setInfo(msg, true);
+              }
+            });
+        } finally {
+          this.edit = false;
+          this.loading = false;
+        }
+      } else {
+        this.edit = true;
       }
-      this.edit = false;
-      this.loading = false;
     },
     handleDelete() {
       const { id, token, role } = this.currentUser;
