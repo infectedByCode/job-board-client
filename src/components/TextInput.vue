@@ -2,11 +2,13 @@
   <div>
     <label v-if="label" :for="name">{{label}}</label>
     <input
+      :id="name"
       :value="input"
       :type="type"
       :class="[$style[size],$style[align]]"
       :disabled="disabled"
       @input="(e) => handleInput(e)"
+      @change="(e) => handleInput(e)"
     />
   </div>
 </template>

@@ -1,9 +1,11 @@
 import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
+import { render, cleanup, emitted, fireEvent, getByRole, getByText, getByLabelText } from '@testing-library/vue';
+import '@testing-library/jest-dom';
 
-import TextInput from '@/components/TextInput.vue';
-import JobModal from '@/components/JobModal.vue';
-import JobCard from '@/components/JobCard.vue';
+import TextInput from '../../src/components/TextInput.vue';
+import JobModal from '../../src/components/JobModal.vue';
+import JobCard from '../../src/components/JobCard.vue';
 
 const factory = (component, options) => {
   return shallowMount(component, {
@@ -17,6 +19,9 @@ const factory = (component, options) => {
 };
 
 describe('Components', () => {
+  afterEach(() => {
+    cleanup();
+  });
   describe('TextInput', () => {
     const baseProps = {
       name: 'input field',
@@ -24,6 +29,7 @@ describe('Components', () => {
       align: 'center',
       type: 'text',
       input: 'any',
+      label: 'input label',
     };
     it('renders with suitable props', () => {
       const propsData = {
@@ -33,35 +39,46 @@ describe('Components', () => {
         type: 'text',
         input: 'my input string',
       };
+      const { getByText, debug } = render(TextInput, {
+        props: {
+          ...propsData,
+        },
+      });
       const wrapper = factory(TextInput, { propsData });
       const props = wrapper.props();
-      assert.hasAnyKeys(props, ['name', 'size', 'align', 'type', 'input']);
-      assert.ok(props.name === propsData.name);
-      assert.ok(props.size === propsData.size);
-      assert.ok(props.align === propsData.align);
-      assert.ok(props.type === propsData.type);
-      assert.ok(props.input === propsData.input);
+      expect(props).toMatchObject(propsData);
     });
     it('renders with a label when label prop is passed', () => {
-      const propsData = { ...baseProps, label: 'Email' };
-      const wrapper = factory(TextInput, { propsData });
-      const label = wrapper.find('label');
-      assert.isTrue(label.exists());
-      assert.ok(label.attributes().for === 'input field');
-      assert.ok(label.text() === 'Email');
+      const { getByText } = render(TextInput, {
+        props: {
+          ...baseProps,
+          label: 'Email',
+        },
+      });
+      const label = getByText('Email');
+      expect(label).toHaveAttribute('for', 'input field');
     });
     it('renders a disabled input field when disabled flag is set', () => {
-      const propsData = { ...baseProps, disabled: true };
-      const wrapper = factory(TextInput, { propsData });
-      const input = wrapper.find('input');
-      assert.ok(wrapper.props().disabled === true);
-      assert.isTrue(Boolean(input.attributes().disabled));
+      const { getByLabelText } = render(TextInput, {
+        props: {
+          ...baseProps,
+          disabled: true,
+        },
+      });
+      const input = getByLabelText('input label');
+      expect(input).toBeDisabled();
     });
-    it('emits input event with user input', () => {
-      const wrapper = factory(TextInput, { propsData: { ...baseProps } });
-      const input = wrapper.find('input');
-      input.setValue('user has input');
-      assert.ok(wrapper.emitted().input[0][0] === 'user has input');
+    it('emits input event with user input', async () => {
+      const { getByLabelText, emitted } = render(TextInput, {
+        props: {
+          ...baseProps,
+          disabled: true,
+        },
+      });
+      const input = getByLabelText('input label');
+      await fireEvent.update(input, 'user has input');
+      expect(emitted()).toHaveProperty('input');
+      expect(emitted().input[0][0]).toBe('user has input');
     });
   });
   describe('JobCard', () => {
@@ -76,31 +93,36 @@ describe('Components', () => {
     it('renders with data passed via props', () => {
       const wrapper = factory(JobCard, { propsData: { jobDetails } });
       const props = wrapper.props();
-      assert.hasAllKeys(props, ['jobDetails']);
-      assert.hasAllKeys(props.jobDetails, ['jobTitle', 'jobLocation', 'salary', 'companyName', 'added', 'summary']);
-      assert.ok(props.jobDetails.jobTitle === jobDetails.jobTitle);
-      assert.ok(props.jobDetails.jobLocation === jobDetails.jobLocation);
-      assert.ok(props.jobDetails.salary === jobDetails.salary);
-      assert.ok(props.jobDetails.companyName === jobDetails.companyName);
-      assert.ok(props.jobDetails.added === jobDetails.added);
-      assert.ok(props.jobDetails.summary === jobDetails.summary);
+      expect(props).toHaveProperty('jobDetails');
+      expect(props.jobDetails).toMatchObject(jobDetails);
     });
     it('emits loadjob with correct detailswhen jobCard button is clicked on', () => {
-      const jobDetailsCopy = { ...jobDetails };
-      const wrapper = factory(JobCard, { propsData: { jobDetails } });
-      wrapper.find('button').trigger('click');
-      assert.deepStrictEqual(wrapper.emitted().loadJob[0][0].job, jobDetails);
+      const { getByRole, emitted } = render(JobCard, {
+        props: {
+          jobDetails,
+        },
+      });
+      const button = getByRole('button', {
+        name: 'Learn More',
+      });
+      fireEvent.click(button);
+      expect(emitted()).toHaveProperty('loadJob');
+      expect(emitted().loadJob[0][0].job).toMatchObject(jobDetails);
     });
   });
   describe('JobModal', () => {
     it('renders given slots', () => {
-      const wrapper = factory(JobModal, { slots: { default: '<h1>Hello World</h1>' } });
-      assert.ok(wrapper.find('h1').text() === 'Hello World');
+      const { getByText } = render(JobModal, {
+        slots: { default: '<h1>Hello World</h1>' },
+      });
+      expect(getByText('Hello World')).toBeInTheDocument();
     });
     it('emits closeModal event when modal is clicked', () => {
-      const wrapper = factory(JobModal);
-      wrapper.trigger('click');
-      assert.exists(wrapper.emitted().closeModal);
+      const { getByText, emitted } = render(JobModal, {
+        slots: { default: '<h1>Hello World</h1>' },
+      });
+      fireEvent.click(getByText('Hello World'));
+      expect(emitted()).toHaveProperty('closeModal');
     });
   });
 });
