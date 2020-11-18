@@ -1,6 +1,0 @@
-{
-  "all": true,
-  "extension": [".js"],
-  "include": ["**/store/*"],
-  "exclude": ["src/mocks/*"]
-}
