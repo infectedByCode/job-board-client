@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import { mutations } from '../../src/store/index';
 
 const { setUser, unsetUser } = mutations;
@@ -14,8 +13,8 @@ describe('Store', () => {
           },
         };
         setUser(state, { fields: ['id', 'token'], values: ['test id', 'auth token'] });
-        assert.ok(state.user.id === 'test id');
-        assert.ok(state.user.token === 'auth token');
+        expect(state.user.id).toBe('test id');
+        expect(state.user.token).toBe('auth token');
       });
     });
     describe('unsetUser', () => {
@@ -27,8 +26,8 @@ describe('Store', () => {
           },
         };
         unsetUser(state);
-        assert.ok(state.user.id === null);
-        assert.ok(state.user.token === null);
+        expect(state.user.id).toBe(null);
+        expect(state.user.token).toBe(null);
       });
     });
   });
