@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import { shallowMount } from '@vue/test-utils';
 import { render, cleanup, emitted, fireEvent, getByRole, getByText, getByLabelText } from '@testing-library/vue';
 import '@testing-library/jest-dom';
