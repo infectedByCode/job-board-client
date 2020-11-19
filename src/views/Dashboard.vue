@@ -1,7 +1,7 @@
 <template>
   <div>
     <Loader :loading="loading" />
-    <p v-if="info.msg" :class="info.isError ? $style.error : $style.success">{{info.msg}}</p>
+    <Alert v-if="info.msg" :variant="info.isError ? 'Error' : 'Success'">{{ info.msg }}</Alert>
     <main v-if="isError === false" :class="$style.dashboard">
       <h1>WELCOME TO YOUR DASHBOARD</h1>
       <section :class="$style.sidebar">
@@ -66,6 +66,8 @@ import {
   updateUserById,
   deleteUserById
 } from "../utils/api";
+
+import Alert from "../components/Alert";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
 import TextInput from "../components/TextInput";
@@ -74,6 +76,7 @@ import { mapActions } from "vuex";
 
 export default {
   components: {
+    Alert,
     Button,
     Loader,
     TextInput
