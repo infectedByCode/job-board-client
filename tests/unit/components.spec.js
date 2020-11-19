@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import TextInput from '../../src/components/TextInput.vue';
 import JobModal from '../../src/components/JobModal.vue';
 import JobCard from '../../src/components/JobCard.vue';
+import Alert from '../../src/components/Alert.vue';
 
 const factory = (component, options) => {
   return shallowMount(component, {
@@ -122,6 +123,40 @@ describe('Components', () => {
       });
       fireEvent.click(getByText('Hello World'));
       expect(emitted()).toHaveProperty('closeModal');
+    });
+  });
+  describe('Alert', () => {
+    it('renders passed slots with default info style', () => {
+      const { getByText } = render(Alert, {
+        slots: { default: '<p>This is information.</p>' },
+      });
+      const alert = getByText('This is information.');
+      expect(alert.parentElement).toHaveClass('alert');
+      expect(alert.parentElement).toHaveClass('alertInfo');
+      expect(alert.parentElement).not.toHaveClass('alertSuccess');
+      expect(alert.parentElement).not.toHaveClass('alertError');
+    });
+    it('renders Alert component with correct styles for a success display', () => {
+      const { getByText } = render(Alert, {
+        props: { variant: 'Success' },
+        slots: { default: '<p>This is a success message.</p>' },
+      });
+      const alert = getByText('This is a success message.');
+      expect(alert.parentElement).toHaveClass('alert');
+      expect(alert.parentElement).toHaveClass('alertSuccess');
+      expect(alert.parentElement).not.toHaveClass('alertInfo');
+      expect(alert.parentElement).not.toHaveClass('alertError');
+    });
+    it('renders Alert component with correct styles for a error display', () => {
+      const { getByText } = render(Alert, {
+        props: { variant: 'Error' },
+        slots: { default: '<p>This is a error message.</p>' },
+      });
+      const alert = getByText('This is a error message.');
+      expect(alert.parentElement).toHaveClass('alert');
+      expect(alert.parentElement).toHaveClass('alertError');
+      expect(alert.parentElement).not.toHaveClass('alertInfo');
+      expect(alert.parentElement).not.toHaveClass('alertSuccess');
     });
   });
 });
