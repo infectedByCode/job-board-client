@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "jest ./tests/unit/*.spec.js --coverage --watch",
+    "test:unit": "jest ./tests/unit/*.spec.js --coverage",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
@@ -31,7 +31,6 @@
     "@vue/test-utils": "^1.1.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^26.6.3",
-    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.1.2",
     "faker": "^5.1.0",
     "jest": "^26.6.3",
@@ -42,7 +41,6 @@
   "jest": {
     "moduleFileExtensions": [
       "js",
-      "json",
       "vue"
     ],
     "transform": {
@@ -51,8 +49,8 @@
     },
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "./src/**/*.{js,vue}",
-      "!./src/mocks/*"
+      "src/**/*.{js,vue}",
+      "!src/mocks/*"
     ]
   }
 }
