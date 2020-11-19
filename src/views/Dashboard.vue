@@ -2,7 +2,7 @@
   <div>
     <Loader :loading="loading" />
     <Alert v-if="info.msg" :variant="info.isError ? 'Error' : 'Success'">{{ info.msg }}</Alert>
-    <main v-if="isError === false" :class="$style.dashboard">
+    <main v-if="!info.isError" :class="$style.dashboard">
       <h1>WELCOME TO YOUR DASHBOARD</h1>
       <section :class="$style.sidebar">
         <img src alt="profile image" />
@@ -109,7 +109,7 @@ export default {
     this.loading = true;
     // Fetch user information
     const { id, token, role } = this.$store.state.user;
-    fetchUserInformation(role, id, "z")
+    fetchUserInformation(role, id, token)
       .then(response => {
         if (response.status === 403) {
           const msg =
