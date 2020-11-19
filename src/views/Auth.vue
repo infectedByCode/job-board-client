@@ -4,15 +4,15 @@
     <!-- TODO: Add keywords -->
     <form :class="$style.authForm" @submit.stop>
       <div :class="$style.messageWrapper">
-        <p
+        <Alert
           v-if="error"
-          :class="$style.error"
-        >We're having a problem with your {{ currentPath === "/login" ? 'login' : 'registration'}}.</p>
-        <p
+          variant="Error"
+        >We're having a problem with your {{ currentPath === "/login" ? 'login' : 'registration'}}.</Alert>
+        <Alert
           v-else-if="success"
-          :class="$style.success"
-        >{{ currentPath === "/login" ? 'Logged in' : 'Registered'}} successfully.</p>
-        <p v-else :class="$style.message">Please complete the form.</p>
+          variant="Success"
+        >{{ currentPath === "/login" ? 'Logged in' : 'Registered'}} successfully.</Alert>
+        <Alert v-else>Please complete the form.</Alert>
       </div>
       <!-- TODO: extract radio set -->
       <fieldset :class="$style.accountType">
@@ -95,6 +95,8 @@
 
 <script>
 import { handleUserAuth } from "../utils/api";
+
+import Alert from "../components/Alert";
 import Loader from "../components/Loader";
 import TextInput from "../components/TextInput";
 
@@ -103,6 +105,7 @@ import { mapActions } from "vuex";
 export default {
   name: "auth",
   components: {
+    Alert,
     Loader,
     TextInput
   },
