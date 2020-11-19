@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "jest ./tests/unit/*.spec.js --coverage --watchAll",
+    "test:unit": "jest ./tests/unit/*.spec.js --coverage --watch",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
@@ -50,6 +50,9 @@
       ".*\\.(js)$": "babel-jest"
     },
     "collectCoverage": true,
-    "collectCoverageFrom": [ "src /**/*.{js,vue}" ]
+    "collectCoverageFrom": [
+      "./src/**/*.{js,vue}",
+      "!./src/mocks/*"
+    ]
   }
 }
