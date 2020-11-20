@@ -1,28 +1,12 @@
 <template>
   <div :class="$style.searchForm">
-    <form>
-      <TextInput
-        v-model="jobType"
-        :input="jobType"
-        name="jobType"
-        size="max"
-        label="What"
-        align="left"
-      />
-      <TextInput
-        v-model="location"
-        :input="location"
-        name="location"
-        size="large"
-        label="Where"
-        align="left"
-      />
+    <form title="job search form">
+      <TextInput v-model="jobType" :input="jobType" name="jobType" size="max" label="What" align="left" />
+      <TextInput v-model="location" :input="location" name="location" size="large" label="Where" align="left" />
       <select>
-        <option
-          v-for="distance in distanceOptions"
-          :key="distance.text"
-          :value="distance.value"
-        >{{distance.text}}</option>
+        <option v-for="distance in distanceOptions" :key="distance.text" :value="distance.value">{{
+          distance.text
+        }}</option>
       </select>
       <Button @click="handleSubmit">Search</Button>
     </form>
@@ -30,35 +14,35 @@
 </template>
 
 <script>
-import Button from "@/components/Button";
-import TextInput from "@/components/TextInput";
+import Button from '../components/Button';
+import TextInput from '../components/TextInput';
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Button,
-    TextInput
+    TextInput,
   },
   data() {
     return {
-      jobType: "",
-      location: ""
+      jobType: '',
+      location: '',
     };
   },
   computed: {
     distanceOptions() {
       const options = [0, 10, 20, 30];
-      return options.map(option => ({ value: 0, text: `${option} miles` }));
-    }
+      return options.map((option) => ({ value: 0, text: `${option} miles` }));
+    },
   },
   methods: {
     handleSubmit() {
       this.$router.push({
-        name: "Job Board",
-        params: { searchTerm: this.jobType }
+        name: 'Job Board',
+        params: { searchTerm: this.jobType },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -68,7 +52,7 @@ export default {
   width: 100%;
   margin: 0 auto;
   padding: 20% 0;
-  background-image: url("../assets/developer.jpg");
+  background-image: url('../assets/developer.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
