@@ -17,4 +17,4 @@ const generateFakeJobs = (num) => {
   return jobs;
 };
 
-export const fakeJobs = generateFakeJobs(10);
+export const fakeJobs = generateFakeJobs;

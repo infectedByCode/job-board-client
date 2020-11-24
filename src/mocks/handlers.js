@@ -8,7 +8,7 @@ export const handlers = [
       ctx.status(200),
       ctx.json({
         status: 200,
-        jobs: fakeJobs,
+        jobs: fakeJobs(10),
       })
     );
   }),
