@@ -1,9 +1,13 @@
 import { render, cleanup, fireEvent, waitFor } from '@testing-library/vue';
 import '@testing-library/jest-dom';
+import axios from 'axios';
+jest.mock('axios');
 
 import App from '../../src/App.vue';
 import Home from '../../src/views/Home.vue';
 import JobBoard from '../../src/views/JobBoard.vue';
+
+import { fakeJobs } from '../../src/mocks/faker';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -13,6 +17,7 @@ const routes = [
 describe('Views', () => {
   afterEach(() => {
     cleanup();
+    jest.resetAllMocks();
   });
   describe('Home', () => {
     it('renders a job search form with relevant elements', () => {
@@ -30,6 +35,35 @@ describe('Views', () => {
       await fireEvent.update(input, 'developer');
       fireEvent.click(getByRole('button', { name: 'Search' }));
       expect(location.href).toContain('/jobs');
+    });
+  });
+  describe('JobBoard', () => {
+    it('renders jobs cards on load without a search term', async () => {
+      axios.get.mockResolvedValue({
+        status: 200,
+        data: {
+          jobs: fakeJobs(10),
+        },
+      });
+      const { findAllByRole } = render(JobBoard, { routes });
+      const listItems = await findAllByRole('listitem');
+      expect(listItems).toHaveLength(10);
+    });
+    it('renders jobs cards on load without a search term', async () => {
+      axios.get.mockResolvedValue({
+        status: 200,
+        data: {
+          jobs: fakeJobs(5),
+        },
+      });
+      const { findAllByRole } = render(JobBoard, {
+        routes,
+        props: {
+          searchTerm: 'developer',
+        },
+      });
+      const listItems = await findAllByRole('listitem');
+      expect(listItems).toHaveLength(5);
     });
   });
 });

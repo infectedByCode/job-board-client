@@ -25,37 +25,37 @@
   </div>
 </template>
 <script>
-import { differenceInCalendarDays } from "date-fns";
-import { fetchJobs, fetchJobsBySearch } from "../utils/api";
-import JobCard from "../components/JobCard";
-import JobModal from "../components/JobModal";
+import { differenceInCalendarDays } from 'date-fns';
+import { fetchJobs, fetchJobsBySearch } from '../utils/api';
+import JobCard from '../components/JobCard';
+import JobModal from '../components/JobModal';
 
 export default {
-  name: "Jobs",
+  name: 'Jobs',
   components: {
     JobCard,
-    JobModal
+    JobModal,
   },
   props: {
     searchTerm: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       jobs: null,
       selectedJob: null,
-      showModal: false
+      showModal: false,
     };
   },
   created() {
     if (this.searchTerm !== null) {
-      fetchJobsBySearch(this.searchTerm).then(result => {
+      fetchJobsBySearch(this.searchTerm).then((result) => {
         if (result instanceof Error) {
           // TODO: Add error handler
         }
-        result.map(job => {
+        result.map((job) => {
           job.added = this.formatDate(job.createdAt);
           job.summary = this.formatRole(job.jobText);
           return job;
@@ -63,11 +63,11 @@ export default {
         this.jobs = result;
       });
     } else {
-      fetchJobs().then(result => {
+      fetchJobs().then((result) => {
         if (result instanceof Error) {
           // TODO: Add error handler
         }
-        result.map(job => {
+        result.map((job) => {
           job.added = this.formatDate(job.createdAt);
           job.summary = this.formatRole(job.jobText);
           return job;
@@ -79,8 +79,8 @@ export default {
   methods: {
     formatDate(date) {
       const numOfDays = differenceInCalendarDays(new Date(), new Date(date));
-      this.formatRole("t");
-      return `${numOfDays} day${numOfDays > 1 ? "s" : ""} ago`;
+      this.formatRole('t');
+      return `${numOfDays} day${numOfDays > 1 ? 's' : ''} ago`;
     },
     formatRole(text) {
       if (text.length < 70) return text;
@@ -89,8 +89,8 @@ export default {
     loadJobDetails(payload) {
       this.selectedJob = payload.job;
       this.showModal = true;
-    }
-  }
+    },
+  },
 };
 </script>
 <style module>
