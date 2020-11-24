@@ -50,7 +50,9 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,vue}",
-      "!src/mocks/*"
+      "!src/mocks/*",
+      "!src/router/*",
+      "!src/main.js"
     ]
   }
 }
