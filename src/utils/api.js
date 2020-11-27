@@ -1,4 +1,5 @@
 import axios from 'axios';
+require('dotenv').config();
 const { VUE_APP_API_URL } = process.env;
 
 export const fetchJobsBySearch = (searchTerm) => {
