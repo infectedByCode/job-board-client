@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Auth from '../views/Auth.vue';
 import Home from '../views/Home.vue';
 import JobBoard from '../views/JobBoard.vue';
+import JobAdvert from '../views/JobAdvert.vue';
 import Dashboard from '../views/Dashboard.vue';
 
 import store from '../store';
@@ -19,6 +20,12 @@ const routes = [
     path: '/jobs',
     name: 'Job Board',
     component: JobBoard,
+    props: true,
+  },
+  {
+    path: '/jobs/:id',
+    name: 'Job Advert',
+    component: JobAdvert,
     props: true,
   },
   {

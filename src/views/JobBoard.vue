@@ -3,14 +3,9 @@
     <JobModal v-if="showModal && selectedJob" :class="$style.modal" @closeModal="showModal = false">
       <span>
         <h1>{{ selectedJob.jobTitle }}</h1>
-        <p>
-          Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora
-          quaeritis. Summus brains sit​​, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris.
-          Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat
-          cerebella viventium. Qui animated corpse, cricket bat max brucks terribilem incessu zomby. The voodoo sacerdos
-          flesh eater, suscitat mortuos comedere carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum
-          cerebro. Nescio brains an Undead zombies. Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.
-        </p>
+        <h2>{{ selectedJob.companyName }}</h2>
+        <p>{{ selectedJob.jobText}}</p>
+        <Button @click="transferToJob">Apply</Button>
       </span>
     </JobModal>
     <ul>
@@ -25,37 +20,39 @@
   </div>
 </template>
 <script>
-import { differenceInCalendarDays } from 'date-fns';
-import { fetchJobs, fetchJobsBySearch } from '../utils/api';
-import JobCard from '../components/JobCard';
-import JobModal from '../components/JobModal';
+import { differenceInCalendarDays } from "date-fns";
+import { fetchJobs, fetchJobsBySearch } from "../utils/api";
+import Button from "../components/Button";
+import JobCard from "../components/JobCard";
+import JobModal from "../components/JobModal";
 
 export default {
-  name: 'Jobs',
+  name: "Jobs",
   components: {
+    Button,
     JobCard,
-    JobModal,
+    JobModal
   },
   props: {
     searchTerm: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
       jobs: null,
       selectedJob: null,
-      showModal: false,
+      showModal: false
     };
   },
   created() {
     if (this.searchTerm !== null) {
-      fetchJobsBySearch(this.searchTerm).then((result) => {
+      fetchJobsBySearch(this.searchTerm).then(result => {
         if (result instanceof Error) {
           // TODO: Add error handler
         }
-        result.map((job) => {
+        result.map(job => {
           job.added = this.formatDate(job.createdAt);
           job.summary = this.formatRole(job.jobText);
           return job;
@@ -63,11 +60,11 @@ export default {
         this.jobs = result;
       });
     } else {
-      fetchJobs().then((result) => {
+      fetchJobs().then(result => {
         if (result instanceof Error) {
           // TODO: Add error handler
         }
-        result.map((job) => {
+        result.map(job => {
           job.added = this.formatDate(job.createdAt);
           job.summary = this.formatRole(job.jobText);
           return job;
@@ -79,8 +76,8 @@ export default {
   methods: {
     formatDate(date) {
       const numOfDays = differenceInCalendarDays(new Date(), new Date(date));
-      this.formatRole('t');
-      return `${numOfDays} day${numOfDays > 1 ? 's' : ''} ago`;
+      this.formatRole("t");
+      return `${numOfDays} day${numOfDays > 1 ? "s" : ""} ago`;
     },
     formatRole(text) {
       if (text.length < 70) return text;
@@ -90,7 +87,16 @@ export default {
       this.selectedJob = payload.job;
       this.showModal = true;
     },
-  },
+    transferToJob() {
+      this.$router.push({
+        name: "Job Advert",
+        params: {
+          id: this.selectedJob.jobId.slice(0, 8),
+          jobDetails: this.selectedJob
+        }
+      });
+    }
+  }
 };
 </script>
 <style module>
