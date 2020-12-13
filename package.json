@@ -54,7 +54,8 @@
       "src/**/*.{js,vue}",
       "!src/mocks/*",
       "!src/router/*",
-      "!src/main.js"
+      "!src/main.js",
+      "!src/App.vue"
     ],
     "testMatch": [
       "**/*.spec.js"
