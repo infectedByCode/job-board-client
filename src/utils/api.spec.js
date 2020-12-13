@@ -5,6 +5,12 @@ require('dotenv').config();
 import * as api from './api';
 
 describe('API calls', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+  afterAll(() => {
+    nock.restore();
+  });
   describe('#fetchJobsBySearch', () => {
     it('returns an array of job objects if successful', async () => {
       nock('http://localhost:3000')
@@ -50,6 +56,59 @@ describe('API calls', () => {
         .reply(500);
       const result = await api.fetchJobsBySearch('dev');
       expect(result).toBeInstanceOf(Error);
+    });
+  });
+  describe('#fetchUserInformation', () => {
+    it('returns an object with jobseeker information', async () => {
+      const jobseeker = {
+        jobseekerId: '1234',
+        jobseekerForename: 'A',
+        jobseekerSurname: 'jobseeking-person',
+        jobKeywords: null,
+        accountCreated: '2020-12-13T11:41:33.000Z',
+      };
+      nock('http://localhost:3000')
+        .defaultReplyHeaders({
+          'access-control-allow-origin': '*',
+        })
+        .get('/jobseekers/1234?token=agoodtoken')
+        .reply(200, {
+          jobseeker,
+        });
+      const result = await api.fetchUserInformation('jobseeker', '1234', 'agoodtoken');
+      expect(result).toHaveProperty('jobseeker');
+      expect(result.jobseeker).toMatchObject(jobseeker);
+    });
+    it('returns an object with company information', async () => {
+      const company = {
+        companyId: '1234',
+        companyName: 'A Company',
+        companyEmail: 'company@email.com',
+        companyPhone: '0800000000',
+        accountCreated: '2020-12-13T11:41:33.000Z',
+      };
+      nock('http://localhost:3000')
+        .defaultReplyHeaders({
+          'access-control-allow-origin': '*',
+        })
+        .get('/companies/1234?token=agoodtoken')
+        .reply(200, {
+          company,
+        });
+      const result = await api.fetchUserInformation('company', '1234', 'agoodtoken');
+      expect(result).toHaveProperty('company');
+      expect(result.company).toMatchObject(company);
+    });
+    it('returns an error object if there API returns a non-20x status', async () => {
+      nock('http://localhost:3000')
+        .defaultReplyHeaders({
+          'access-control-allow-origin': '*',
+        })
+        .get('/jobseekers/1234?token=agoodtoken')
+        .reply(500);
+      const result = await api.fetchUserInformation('jobseeker', '1234', 'agoodtoken');
+      expect(result.status).toBe(500);
+      expect(result.statusText).toBe('Internal Server Error');
     });
   });
 });
