@@ -1,5 +1,8 @@
 <template>
-  <button :class="[$style.customButton,$style[`${type}`]]" @click.prevent="handleClick">
+  <button
+    :class="[$style.customButton, $style[`${type}`], size ? $style[`${size}`] : null]"
+    @click.prevent="handleClick"
+  >
     <slot />
   </button>
 </template>
@@ -9,14 +12,18 @@ export default {
   props: {
     type: {
       type: String,
-      default: "primary"
-    }
+      default: 'primary',
+    },
+    size: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     handleClick() {
-      this.$emit("click");
-    }
-  }
+      this.$emit('click');
+    },
+  },
 };
 </script>
 
@@ -39,5 +46,17 @@ export default {
 .danger {
   background-color: #f00;
   color: #fff;
+}
+
+.small {
+  width: 25%;
+}
+
+.medium {
+  width: 50%;
+}
+
+.large {
+  width: 75%;
 }
 </style>

@@ -15,8 +15,8 @@
     </section>
     <section :class="$style.companyContainer">
       <p>{{ jobDetails.companyName }}</p>
-      <Button>Email</Button>
-      <Button>Call</Button>
+      <Button size="small">Email</Button>
+      <Button size="small">Call</Button>
     </section>
   </main>
 </template>
@@ -24,6 +24,9 @@
 <script>
 import Button from '../components/Button';
 export default {
+  components: {
+    Button,
+  },
   props: {
     jobDetails: {
       type: Object,
@@ -34,11 +37,6 @@ export default {
 </script>
 
 <style module>
-.jobContainer,
-.companyContainer {
-  margin: 30px 0 0 0;
-}
-
 .tag {
   display: inline-block;
   list-style: none;
@@ -46,5 +44,15 @@ export default {
   padding: 5px;
   border-radius: 5px;
   background-color: cadetblue;
+}
+
+.jobContainer,
+.companyContainer {
+  margin: 30px 0 0 0;
+}
+
+.companyContainer > button {
+  display: inline-block;
+  margin: 10px;
 }
 </style>
