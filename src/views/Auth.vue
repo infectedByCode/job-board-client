@@ -171,14 +171,12 @@ export default {
           this.error = true;
         }
         try {
-          if (response.status === 201 && response.data) {
-            this.updateUser({ fields: ["id"], values: [response.data.ref] });
-          }
-          if (response.status === 200 && response.data) {
-            const { userId, token } = response.data;
+          const { status, data } = response;
+          if ((status === 200 || status === 201) && data) {
+            let { userId, token, ref } = data;
             this.updateUser({
               fields: ["id", "token", "role"],
-              values: [userId, token, role]
+              values: [userId || ref, token, role]
             });
           }
           if (this.currentUser.id) {
