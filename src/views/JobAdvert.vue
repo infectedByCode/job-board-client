@@ -18,21 +18,33 @@
       <Button size="small">Email</Button>
       <Button size="small">Call</Button>
     </section>
+    <form @submit.prevent="handleApplication" title="job-application-form">
+      <label for="cv-upload">Select resume:</label>
+      <input id="cv-upload" type="file" />
+      <label for="letter-upload">Select cover letter:</label>
+      <input id="letter-upload" type="file" />
+      <button>Apply</button>
+    </form>
   </main>
 </template>
 
 <script>
-import Button from '../components/Button';
+import Button from "../components/Button";
 export default {
   components: {
-    Button,
+    Button
   },
   props: {
     jobDetails: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
+  methods: {
+    handleApplication(e) {
+      console.log(e);
+    }
+  }
 };
 </script>
 
