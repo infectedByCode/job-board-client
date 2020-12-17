@@ -42,7 +42,16 @@ export default {
   },
   methods: {
     handleApplication(e) {
-      console.log(e);
+      const cv = document.querySelector("#cv-upload").files[0];
+      const coverLetter = document.querySelector("#letter-upload").files[0];
+      const formData = new FormData();
+      formData.append("cv", cv);
+      formData.append("cover letter", coverLetter);
+      // TODO: extract to API utils
+      fetch(`${process.env.VUE_APP_API_URL}/applications`, {
+        method: "POST",
+        body: formData
+      });
     }
   }
 };
