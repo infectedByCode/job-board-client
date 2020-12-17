@@ -8,7 +8,13 @@
         <p>Posted {{ jobDetails.added }}</p>
       </div>
       <ul>
-        <li v-for="(tag, i) in jobDetails.tags.split(',')" :key="i" :class="$style.tag">{{ tag }}</li>
+        <li
+          v-for="(tag, i) in jobDetails.tags.split(',')"
+          :key="i"
+          :class="$style.tag"
+        >
+          {{ tag }}
+        </li>
       </ul>
 
       <p>{{ jobDetails.jobText }}</p>
@@ -18,42 +24,46 @@
       <Button size="small">Email</Button>
       <Button size="small">Call</Button>
     </section>
-    <form @submit.prevent="handleApplication" title="job-application-form">
+    <form
+      :class="$style.applicationForm"
+      @submit.prevent="handleApplication"
+      title="job-application-form"
+    >
       <label for="cv-upload">Select resume:</label>
       <input id="cv-upload" type="file" />
       <label for="letter-upload">Select cover letter:</label>
       <input id="letter-upload" type="file" />
-      <button>Apply</button>
+      <Button @click="handleApplication">Apply</Button>
     </form>
   </main>
 </template>
 
 <script>
-import Button from "../components/Button";
+import Button from '../components/Button';
 export default {
   components: {
-    Button
+    Button,
   },
   props: {
     jobDetails: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     handleApplication(e) {
-      const cv = document.querySelector("#cv-upload").files[0];
-      const coverLetter = document.querySelector("#letter-upload").files[0];
+      const cv = document.querySelector('#cv-upload').files[0];
+      const coverLetter = document.querySelector('#letter-upload').files[0];
       const formData = new FormData();
-      formData.append("cv", cv);
-      formData.append("cover letter", coverLetter);
+      formData.append('cv', cv);
+      formData.append('cover letter', coverLetter);
       // TODO: extract to API utils
       fetch(`${process.env.VUE_APP_API_URL}/applications`, {
-        method: "POST",
-        body: formData
+        method: 'POST',
+        body: formData,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -75,5 +85,12 @@ export default {
 .companyContainer > button {
   display: inline-block;
   margin: 10px;
+}
+
+.applicationForm {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 10px auto;
 }
 </style>
