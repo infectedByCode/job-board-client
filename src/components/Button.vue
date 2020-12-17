@@ -1,6 +1,11 @@
 <template>
   <button
-    :class="[$style.customButton, $style[`${type}`], size ? $style[`${size}`] : null]"
+    :class="[
+      $style.customButton,
+      $style[`${type}`],
+      size ? $style[`${size}`] : null,
+    ]"
+    :type="buttonType"
     @click.prevent="handleClick"
   >
     <slot />
@@ -17,6 +22,10 @@ export default {
     size: {
       type: String,
       default: '',
+    },
+    buttonType: {
+      type: String,
+      default: 'button',
     },
   },
   methods: {

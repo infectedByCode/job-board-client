@@ -33,7 +33,7 @@
       <input id="cv-upload" type="file" />
       <label for="letter-upload">Select cover letter:</label>
       <input id="letter-upload" type="file" />
-      <Button @click="handleApplication">Apply</Button>
+      <Button buttonType="submit">Apply</Button>
     </form>
   </main>
 </template>
