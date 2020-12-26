@@ -26,14 +26,39 @@
     </section>
     <form
       :class="$style.applicationForm"
-      @submit.prevent="handleApplication"
+      @submit.prevent
       title="job-application-form"
     >
+      <label for="forename">Forename:</label>
+      <input
+        v-model="applicant.forename"
+        id="forename"
+        name="forename"
+        required
+      />
+      <label for="surname">Surname:</label>
+      <input v-model="applicant.surname" id="surname" name="surname" required />
+      <label for="email">Email:</label>
+      <input
+        v-model="applicant.email"
+        id="email"
+        name="email"
+        type="email"
+        required
+      />
+      <label for="telephone">Telephone:</label>
+      <input
+        v-model="applicant.telephone"
+        id="telephone"
+        name="telephone"
+        type="tel"
+        required
+      />
       <label for="cv-upload">Select resume:</label>
-      <input id="cv-upload" type="file" />
+      <input id="cv-upload" name="cv" type="file" />
       <label for="letter-upload">Select cover letter:</label>
-      <input id="letter-upload" type="file" />
-      <Button buttonType="submit">Apply</Button>
+      <input id="letter-upload" name="letter" type="file" />
+      <Button buttonType="submit" @click="handleApplication">Apply</Button>
     </form>
   </main>
 </template>
@@ -41,8 +66,19 @@
 <script>
 import Button from '../components/Button';
 export default {
+  name: 'JobAdvert',
   components: {
     Button,
+  },
+  data() {
+    return {
+      applicant: {
+        forename: '',
+        surname: '',
+        email: '',
+        telephone: '',
+      },
+    };
   },
   props: {
     jobDetails: {
