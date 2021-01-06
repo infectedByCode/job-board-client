@@ -34,7 +34,7 @@ describe('API calls', () => {
         });
       const result = await api.fetchJobsBySearch('dev');
       expect(result).toHaveLength(1);
-      result.forEach((job) => {
+      result.forEach(job => {
         expect(job).toEqual({
           jobId: 1,
           jobTitle: 'title',
@@ -75,7 +75,11 @@ describe('API calls', () => {
         .reply(200, {
           jobseeker,
         });
-      const result = await api.fetchUserInformation('jobseeker', '1234', 'agoodtoken');
+      const result = await api.fetchUserInformation(
+        'jobseeker',
+        '1234',
+        'agoodtoken'
+      );
       expect(result).toHaveProperty('jobseeker');
       expect(result.jobseeker).toMatchObject(jobseeker);
     });
@@ -95,7 +99,11 @@ describe('API calls', () => {
         .reply(200, {
           company,
         });
-      const result = await api.fetchUserInformation('company', '1234', 'agoodtoken');
+      const result = await api.fetchUserInformation(
+        'company',
+        '1234',
+        'agoodtoken'
+      );
       expect(result).toHaveProperty('company');
       expect(result.company).toMatchObject(company);
     });
@@ -106,9 +114,24 @@ describe('API calls', () => {
         })
         .get('/jobseekers/1234?token=agoodtoken')
         .reply(500);
-      const result = await api.fetchUserInformation('jobseeker', '1234', 'agoodtoken');
+      const result = await api.fetchUserInformation(
+        'jobseeker',
+        '1234',
+        'agoodtoken'
+      );
       expect(result.status).toBe(500);
       expect(result.statusText).toBe('Internal Server Error');
     });
   });
+  // describe('#updateUserById', () => {
+  //   it('returns a 200 with a success message when jobseeker updated', async () => {
+  //     nock('http://localhost:3000')
+  //       .defaultReplyHeaders({
+  //         'access-control-allow-origin': '*',
+  //       })
+  //       .patch('/jobseekers/1234?token=token', {})
+  //       .reply(200);
+  //     const result = await api.updateUserById('jobseeker', '1234', 'token');
+  //   });
+  // });
 });
